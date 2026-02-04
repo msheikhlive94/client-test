@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
           })
@@ -35,8 +35,10 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Public routes that don't need auth
-  const publicRoutes = ['/login', '/onboard', '/portal', '/setup', '/api/setup']
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
+  const publicRoutes = ['/', '/login', '/onboard', '/portal', '/setup', '/api/setup', '/api/stripe']
+  const isPublicRoute = publicRoutes.some(route =>
+    pathname === route || (route !== '/' && pathname.startsWith(route))
+  )
 
   // If accessing admin routes without auth, redirect to login
   if (!isPublicRoute && !user) {
@@ -48,7 +50,7 @@ export async function middleware(request: NextRequest) {
   // If authenticated user tries to access login, redirect to dashboard
   if (pathname === '/login' && user) {
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
 

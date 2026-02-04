@@ -88,7 +88,7 @@ function LoginForm() {
       }
 
       // Redirect to dashboard
-      router.replace('/')
+      router.replace('/dashboard')
     } catch (err) {
       setError('An unexpected error occurred. Please try again.')
       setIsLoading(false)

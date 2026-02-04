@@ -22,7 +22,7 @@ import { useState } from 'react'
 import { appConfig } from '@/lib/config/theme'
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Leads', href: '/leads', icon: UserPlus },
   { name: 'Projects', href: '/projects', icon: FolderKanban },
   { name: 'Clients', href: '/clients', icon: Users },
@@ -45,7 +45,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navigation.map((item) => {
           const isActive = pathname === item.href || 
-            (item.href !== '/' && pathname.startsWith(item.href))
+            (item.href !== '/dashboard' && pathname.startsWith(item.href))
           
           return (
             <Link
