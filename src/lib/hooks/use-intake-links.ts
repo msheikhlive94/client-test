@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { IntakeLink, IntakeLinkInsert } from '@/types/database'
+import { useWorkspace } from '@/lib/contexts/workspace-context'
 
 function generateToken(length: number = 12): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
@@ -14,18 +15,27 @@ function generateToken(length: number = 12): string {
 }
 
 export function useIntakeLinks() {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['intake_links'],
+    queryKey: ['intake_links', workspaceId],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('intake_links')
         .select('*')
         .order('created_at', { ascending: false })
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
+      
       if (error) throw error
       return data as IntakeLink[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
@@ -79,21 +89,25 @@ export function useValidateIntakeToken() {
 
 export function useCreateIntakeLink() {
   const queryClient = useQueryClient()
+  const { workspaceId } = useWorkspace()
   
   return useMutation({
     mutationFn: async (options?: { label?: string; expires_at?: string; max_uses?: number }) => {
       const supabase = createClient()
       const token = generateToken()
       
+      const insertData: Record<string, unknown> = {
+        token,
+        label: options?.label,
+        expires_at: options?.expires_at,
+        max_uses: options?.max_uses,
+        is_active: true
+      }
+      if (workspaceId) insertData.workspace_id = workspaceId
+      
       const { data, error } = await supabase
         .from('intake_links')
-        .insert({
-          token,
-          label: options?.label,
-          expires_at: options?.expires_at,
-          max_uses: options?.max_uses,
-          is_active: true
-        })
+        .insert(insertData)
         .select()
         .single()
       

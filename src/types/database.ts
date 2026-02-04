@@ -15,6 +15,7 @@ export type NoteType = 'general' | 'meeting' | 'technical' | 'decision'
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'lost'
 export type BudgetRange = 'under_5k' | '5k_10k' | '10k_25k' | '25k_50k' | '50k_plus' | 'not_sure'
 export type ProjectTimeline = 'asap' | '1_month' | '2_3_months' | '3_6_months' | 'flexible'
+export type WorkspaceMemberRole = 'owner' | 'admin' | 'member'
 
 export interface Database {
   public: {
@@ -39,6 +40,61 @@ export interface Database {
           created_at?: string
         }
       }
+      workspaces: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          owner_id: string | null
+          logo_url: string | null
+          settings: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          owner_id?: string | null
+          logo_url?: string | null
+          settings?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          owner_id?: string | null
+          logo_url?: string | null
+          settings?: Json
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      workspace_members: {
+        Row: {
+          id: string
+          workspace_id: string
+          user_id: string
+          role: WorkspaceMemberRole
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          workspace_id: string
+          user_id: string
+          role?: WorkspaceMemberRole
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          workspace_id?: string
+          user_id?: string
+          role?: WorkspaceMemberRole
+          created_at?: string
+        }
+      }
       clients: {
         Row: {
           id: string
@@ -49,6 +105,7 @@ export interface Database {
           company: string | null
           address: string | null
           notes: string | null
+          workspace_id: string
           created_at: string
           updated_at: string
         }
@@ -61,6 +118,7 @@ export interface Database {
           company?: string | null
           address?: string | null
           notes?: string | null
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -73,6 +131,7 @@ export interface Database {
           company?: string | null
           address?: string | null
           notes?: string | null
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -91,6 +150,7 @@ export interface Database {
           estimated_hours: number | null
           start_date: string | null
           end_date: string | null
+          workspace_id: string
           created_at: string
           updated_at: string
         }
@@ -107,6 +167,7 @@ export interface Database {
           estimated_hours?: number | null
           start_date?: string | null
           end_date?: string | null
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -123,6 +184,7 @@ export interface Database {
           estimated_hours?: number | null
           start_date?: string | null
           end_date?: string | null
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -140,6 +202,7 @@ export interface Database {
           due_date: string | null
           position: number
           assigned_to: string | null
+          workspace_id: string
           created_at: string
           updated_at: string
         }
@@ -155,6 +218,7 @@ export interface Database {
           due_date?: string | null
           position?: number
           assigned_to?: string | null
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -170,6 +234,7 @@ export interface Database {
           due_date?: string | null
           position?: number
           assigned_to?: string | null
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -183,6 +248,7 @@ export interface Database {
           duration_minutes: number
           date: string
           billable: boolean
+          workspace_id: string
           created_at: string
           updated_at: string
         }
@@ -194,6 +260,7 @@ export interface Database {
           duration_minutes: number
           date?: string
           billable?: boolean
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -205,6 +272,7 @@ export interface Database {
           duration_minutes?: number
           date?: string
           billable?: boolean
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -216,6 +284,7 @@ export interface Database {
           title: string
           content: string | null
           note_type: NoteType
+          workspace_id: string
           created_at: string
           updated_at: string
         }
@@ -225,6 +294,7 @@ export interface Database {
           title: string
           content?: string | null
           note_type?: NoteType
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -234,6 +304,7 @@ export interface Database {
           title?: string
           content?: string | null
           note_type?: NoteType
+          workspace_id?: string
           created_at?: string
           updated_at?: string
         }
@@ -264,6 +335,7 @@ export interface Database {
       task_status: TaskStatus
       task_priority: TaskPriority
       note_type: NoteType
+      workspace_member_role: WorkspaceMemberRole
     }
   }
 }
@@ -272,6 +344,14 @@ export interface Database {
 export type User = Database['public']['Tables']['users']['Row']
 export type UserInsert = Database['public']['Tables']['users']['Insert']
 export type UserUpdate = Database['public']['Tables']['users']['Update']
+
+export type Workspace = Database['public']['Tables']['workspaces']['Row']
+export type WorkspaceInsert = Database['public']['Tables']['workspaces']['Insert']
+export type WorkspaceUpdate = Database['public']['Tables']['workspaces']['Update']
+
+export type WorkspaceMember = Database['public']['Tables']['workspace_members']['Row']
+export type WorkspaceMemberInsert = Database['public']['Tables']['workspace_members']['Insert']
+export type WorkspaceMemberUpdate = Database['public']['Tables']['workspace_members']['Update']
 
 export type Client = Database['public']['Tables']['clients']['Row']
 export type ClientInsert = Database['public']['Tables']['clients']['Insert']
@@ -295,7 +375,7 @@ export type NoteUpdate = Database['public']['Tables']['notes']['Update']
 
 export type ProjectStats = Database['public']['Views']['project_stats']['Row']
 
-// Lead types
+// Lead types (with workspace_id)
 export interface Lead {
   id: string
   company_name: string
@@ -315,6 +395,7 @@ export interface Lead {
   converted_project_id: string | null
   intake_token: string | null
   token_used_at: string | null
+  workspace_id: string
   created_at: string
   updated_at: string
 }
@@ -334,6 +415,7 @@ export interface LeadInsert {
   status?: LeadStatus
   notes?: string | null
   intake_token?: string | null
+  workspace_id?: string
 }
 
 export interface LeadUpdate {
@@ -352,6 +434,7 @@ export interface LeadUpdate {
   notes?: string | null
   converted_client_id?: string | null
   converted_project_id?: string | null
+  workspace_id?: string
 }
 
 export interface IntakeLink {
@@ -362,6 +445,7 @@ export interface IntakeLink {
   max_uses: number | null
   use_count: number
   is_active: boolean
+  workspace_id: string
   created_at: string
 }
 
@@ -371,6 +455,7 @@ export interface IntakeLinkInsert {
   expires_at?: string | null
   max_uses?: number | null
   is_active?: boolean
+  workspace_id?: string
 }
 
 // Client Portal types

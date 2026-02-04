@@ -3,10 +3,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { Lead, LeadInsert, LeadUpdate, LeadStatus } from '@/types/database'
+import { useWorkspace } from '@/lib/contexts/workspace-context'
 
 export function useLeads(status?: LeadStatus) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['leads', { status }],
+    queryKey: ['leads', { status, workspaceId }],
     queryFn: async () => {
       const supabase = createClient()
       let query = supabase
@@ -14,6 +17,9 @@ export function useLeads(status?: LeadStatus) {
         .select('*')
         .order('created_at', { ascending: false })
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
       if (status) {
         query = query.eq('status', status)
       }
@@ -22,37 +28,54 @@ export function useLeads(status?: LeadStatus) {
       
       if (error) throw error
       return data as Lead[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useNewLeads() {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['leads', 'new'],
+    queryKey: ['leads', 'new', workspaceId],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('leads')
         .select('*')
         .in('status', ['new', 'contacted', 'qualified'])
         .order('created_at', { ascending: false })
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
+      
       if (error) throw error
       return data as Lead[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useLead(id: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
     queryKey: ['leads', id],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('leads')
         .select('*')
         .eq('id', id)
-        .single()
+      
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query.single()
       
       if (error) throw error
       return data as Lead
@@ -63,13 +86,15 @@ export function useLead(id: string) {
 
 export function useCreateLead() {
   const queryClient = useQueryClient()
+  const { workspaceId } = useWorkspace()
   
   return useMutation({
     mutationFn: async (lead: LeadInsert) => {
       const supabase = createClient()
+      const insertData = workspaceId ? { ...lead, workspace_id: workspaceId } : lead
       const { data, error } = await supabase
         .from('leads')
-        .insert(lead)
+        .insert(insertData)
         .select()
         .single()
       
@@ -126,6 +151,7 @@ export function useDeleteLead() {
 
 export function useConvertLead() {
   const queryClient = useQueryClient()
+  const { workspaceId } = useWorkspace()
   
   return useMutation({
     mutationFn: async ({ leadId, clientData, projectData }: {
@@ -135,33 +161,39 @@ export function useConvertLead() {
     }) => {
       const supabase = createClient()
       
-      // Create client
+      // Create client (with workspace_id)
+      const clientInsert: Record<string, unknown> = {
+        name: clientData.name,
+        contact_name: clientData.contact_name,
+        email: clientData.email,
+        phone: clientData.phone,
+        notes: `Website: ${clientData.website || 'N/A'}`
+      }
+      if (workspaceId) clientInsert.workspace_id = workspaceId
+
       const { data: client, error: clientError } = await supabase
         .from('clients')
-        .insert({
-          name: clientData.name,
-          contact_name: clientData.contact_name,
-          email: clientData.email,
-          phone: clientData.phone,
-          notes: `Website: ${clientData.website || 'N/A'}`
-        })
+        .insert(clientInsert)
         .select()
         .single()
       
       if (clientError) throw clientError
       
-      // Create project
+      // Create project (with workspace_id)
+      const projectInsert: Record<string, unknown> = {
+        client_id: client.id,
+        name: projectData.name,
+        description: projectData.description,
+        project_type: projectData.project_type || 'other',
+        budget_type: projectData.budget_type || 'hourly',
+        budget_amount: projectData.budget_amount,
+        status: 'draft'
+      }
+      if (workspaceId) projectInsert.workspace_id = workspaceId
+
       const { data: project, error: projectError } = await supabase
         .from('projects')
-        .insert({
-          client_id: client.id,
-          name: projectData.name,
-          description: projectData.description,
-          project_type: projectData.project_type || 'other',
-          budget_type: projectData.budget_type || 'hourly',
-          budget_amount: projectData.budget_amount,
-          status: 'draft'
-        })
+        .insert(projectInsert)
         .select()
         .single()
       

@@ -10,6 +10,18 @@ function createSetupClient() {
   )
 }
 
+/** Convert a string to a URL-friendly slug */
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    || 'workspace'
+}
+
 /**
  * GET /api/setup — Check if initial setup has been completed
  * Returns { setupRequired: boolean }
@@ -51,8 +63,9 @@ export async function GET() {
  * 1. Verifies no admin users exist (prevents re-running)
  * 2. Creates the Supabase Auth user
  * 3. Inserts into admin_users table
- * 4. Creates workspace_settings row
- * 5. Optionally creates the first project
+ * 4. Creates a workspace + workspace_member (owner)
+ * 5. Creates workspace_settings row
+ * 6. Optionally creates the first project (with workspace_id)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -111,10 +124,60 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3. Insert into admin_users
+    // 3. Create workspace
+    const workspaceName = companyName || 'My Workspace'
+    const workspaceSlug = slugify(workspaceName)
+    let workspaceId: string | null = null
+
+    try {
+      const { data: workspace, error: workspaceError } = await supabase
+        .from('workspaces')
+        .insert({
+          name: workspaceName,
+          slug: workspaceSlug,
+          owner_id: authData.user.id,
+          logo_url: logoUrl || null,
+          settings: {},
+        })
+        .select('id')
+        .single()
+
+      if (workspaceError) {
+        console.error('Workspace creation error:', workspaceError)
+        // Non-fatal if workspace table doesn't exist yet (migration not applied)
+      } else {
+        workspaceId = workspace.id
+      }
+    } catch (wsErr) {
+      console.error('Workspace creation exception:', wsErr)
+    }
+
+    // 4. Create workspace member (owner)
+    if (workspaceId) {
+      try {
+        const { error: memberError } = await supabase
+          .from('workspace_members')
+          .insert({
+            workspace_id: workspaceId,
+            user_id: authData.user.id,
+            role: 'owner',
+          })
+
+        if (memberError) {
+          console.error('Workspace member creation error:', memberError)
+        }
+      } catch (memberErr) {
+        console.error('Workspace member creation exception:', memberErr)
+      }
+    }
+
+    // 5. Insert into admin_users (with workspace_id if available)
+    const adminInsert: Record<string, unknown> = { email: authData.user.email }
+    if (workspaceId) adminInsert.workspace_id = workspaceId
+
     const { error: adminError } = await supabase
       .from('admin_users')
-      .insert({ email: authData.user.email })
+      .insert(adminInsert)
 
     if (adminError) {
       console.error('Admin user insert error:', adminError)
@@ -126,7 +189,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 4. Create workspace settings
+    // 6. Create workspace settings
     const { error: settingsError } = await supabase
       .from('workspace_settings')
       .insert({
@@ -140,18 +203,21 @@ export async function POST(request: NextRequest) {
       // Non-fatal — setup is still usable without this
     }
 
-    // 5. Optionally create first project
+    // 7. Optionally create first project (with workspace_id)
     let projectId: string | null = null
     if (project?.name) {
+      const projectInsert: Record<string, unknown> = {
+        name: project.name,
+        description: project.description || null,
+        status: 'active',
+        project_type: 'other',
+        budget_type: 'hourly',
+      }
+      if (workspaceId) projectInsert.workspace_id = workspaceId
+
       const { data: projectData, error: projectError } = await supabase
         .from('projects')
-        .insert({
-          name: project.name,
-          description: project.description || null,
-          status: 'active',
-          project_type: 'other',
-          budget_type: 'hourly',
-        })
+        .insert(projectInsert)
         .select('id')
         .single()
 
@@ -166,6 +232,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       userId: authData.user.id,
+      workspaceId,
       projectId,
     })
   } catch (err) {

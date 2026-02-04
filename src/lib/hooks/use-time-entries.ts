@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { TimeEntry, TimeEntryInsert, TimeEntryUpdate } from '@/types/database'
+import { useWorkspace } from '@/lib/contexts/workspace-context'
 import { startOfWeek, endOfWeek, format } from 'date-fns'
 
 // Extended type for time entries with relations
@@ -12,8 +13,10 @@ export type TimeEntryWithRelations = TimeEntry & {
 }
 
 export function useTimeEntries(projectId?: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['time_entries', { projectId }],
+    queryKey: ['time_entries', { projectId, workspaceId }],
     queryFn: async (): Promise<TimeEntryWithRelations[]> => {
       const supabase = createClient()
       let query = supabase
@@ -22,6 +25,9 @@ export function useTimeEntries(projectId?: string) {
         .order('date', { ascending: false })
         .order('created_at', { ascending: false })
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
       if (projectId) {
         query = query.eq('project_id', projectId)
       }
@@ -30,19 +36,21 @@ export function useTimeEntries(projectId?: string) {
       
       if (error) throw error
       return data as TimeEntryWithRelations[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useWeekTimeEntries(weekStart?: Date) {
+  const { workspaceId } = useWorkspace()
   const start = weekStart || startOfWeek(new Date(), { weekStartsOn: 1 })
   const end = endOfWeek(start, { weekStartsOn: 1 })
   
   return useQuery({
-    queryKey: ['time_entries', 'week', format(start, 'yyyy-MM-dd')],
+    queryKey: ['time_entries', 'week', format(start, 'yyyy-MM-dd'), workspaceId],
     queryFn: async (): Promise<TimeEntryWithRelations[]> => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('time_entries')
         .select('*, projects(id, name, hourly_rate, clients(name)), tasks(id, title)')
         .gte('date', format(start, 'yyyy-MM-dd'))
@@ -50,21 +58,33 @@ export function useWeekTimeEntries(weekStart?: Date) {
         .order('date')
         .order('created_at', { ascending: false })
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
+      
       if (error) throw error
       return data as TimeEntryWithRelations[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useTimeStats(startDate?: string, endDate?: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['time_entries', 'stats', startDate, endDate],
+    queryKey: ['time_entries', 'stats', startDate, endDate, workspaceId],
     queryFn: async () => {
       const supabase = createClient()
       let query = supabase
         .from('time_entries')
         .select('duration_minutes, billable, project_id, projects(hourly_rate)')
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
       if (startDate) {
         query = query.gte('date', startDate)
       }
@@ -93,19 +113,22 @@ export function useTimeStats(startDate?: string, endDate?: string) {
         billableAmount,
         entriesCount: entries.length
       }
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useCreateTimeEntry() {
   const queryClient = useQueryClient()
+  const { workspaceId } = useWorkspace()
   
   return useMutation({
     mutationFn: async (entry: TimeEntryInsert) => {
       const supabase = createClient()
+      const insertData = workspaceId ? { ...entry, workspace_id: workspaceId } : entry
       const { data, error } = await supabase
         .from('time_entries')
-        .insert(entry)
+        .insert(insertData)
         .select('*, projects(id, name, hourly_rate, clients(name)), tasks(id, title)')
         .single()
       

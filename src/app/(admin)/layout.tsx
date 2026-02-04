@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Sidebar, MobileHeader } from '@/components/layout/sidebar'
+import { WorkspaceProvider } from '@/lib/contexts/workspace-context'
 import { Loader2 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -80,12 +81,14 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="flex flex-col h-screen lg:flex-row">
-      <MobileHeader />
-      <Sidebar />
-      <main className="flex-1 overflow-auto bg-zinc-50 dark:bg-zinc-900">
-        {children}
-      </main>
-    </div>
+    <WorkspaceProvider>
+      <div className="flex flex-col h-screen lg:flex-row">
+        <MobileHeader />
+        <Sidebar />
+        <main className="flex-1 overflow-auto bg-zinc-50 dark:bg-zinc-900">
+          {children}
+        </main>
+      </div>
+    </WorkspaceProvider>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
+import { useWorkspace } from '@/lib/contexts/workspace-context'
 
 export interface MentionableUser {
   id: string
@@ -12,32 +13,62 @@ export interface MentionableUser {
 
 /**
  * Fetch all users who can be @mentioned in a project's comments.
- * This includes admin users (from the `users` table) and client users
- * (from `client_users` linked to the project's client).
+ * This includes admin users (from the `users` table, filtered by workspace membership
+ * when available) and client users (from `client_users` linked to the project's client).
  */
 export function useMentionUsers(projectId: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['mention-users', projectId],
+    queryKey: ['mention-users', projectId, workspaceId],
     queryFn: async () => {
       const supabase = createClient()
       const mentionableUsers: MentionableUser[] = []
 
-      // 1. Get all admin users
-      const { data: adminUsers, error: adminError } = await supabase
-        .from('users')
-        .select('id, email, name')
-        .order('email')
+      // 1. Get admin users — filtered by workspace membership when available
+      if (workspaceId) {
+        const { data: members, error: membersError } = await supabase
+          .from('workspace_members')
+          .select('user_id')
+          .eq('workspace_id', workspaceId)
 
-      if (adminError) throw adminError
+        if (!membersError && members && members.length > 0) {
+          const userIds = members.map(m => m.user_id)
+          const { data: adminUsers, error: adminError } = await supabase
+            .from('users')
+            .select('id, email, name')
+            .in('id', userIds)
+            .order('email')
 
-      if (adminUsers) {
-        for (const u of adminUsers) {
-          mentionableUsers.push({
-            id: u.id,
-            email: u.email,
-            name: u.name,
-            type: 'admin'
-          })
+          if (!adminError && adminUsers) {
+            for (const u of adminUsers) {
+              mentionableUsers.push({
+                id: u.id,
+                email: u.email,
+                name: u.name,
+                type: 'admin'
+              })
+            }
+          }
+        }
+      } else {
+        // Fallback: fetch all admin users (pre-migration or portal context)
+        const { data: adminUsers, error: adminError } = await supabase
+          .from('users')
+          .select('id, email, name')
+          .order('email')
+
+        if (adminError) throw adminError
+
+        if (adminUsers) {
+          for (const u of adminUsers) {
+            mentionableUsers.push({
+              id: u.id,
+              email: u.email,
+              name: u.name,
+              type: 'admin'
+            })
+          }
         }
       }
 
@@ -60,16 +91,10 @@ export function useMentionUsers(projectId: string) {
         if (clientError) throw clientError
 
         if (clientUsers) {
-          // For each client user, get their auth email
-          // We need to fetch from auth - but since we can't access auth.users directly from client,
-          // we'll check if they're already in our admin users list, if not add them
           for (const cu of clientUsers) {
             // Skip if already in the list (admin who is also a client user)
             if (mentionableUsers.some(u => u.id === cu.user_id)) continue
 
-            // We don't have direct access to auth.users from the client,
-            // so we use the name from client_users and the user_id
-            // The email will be fetched from the notify API (server-side)
             mentionableUsers.push({
               id: cu.user_id,
               email: '', // Will be resolved server-side if needed

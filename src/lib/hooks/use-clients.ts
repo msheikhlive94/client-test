@@ -3,33 +3,50 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { Client, ClientInsert, ClientUpdate } from '@/types/database'
+import { useWorkspace } from '@/lib/contexts/workspace-context'
 
 export function useClients() {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['clients'],
+    queryKey: ['clients', workspaceId],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('clients')
         .select('*')
         .order('name')
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
+      
       if (error) throw error
       return data as Client[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useClient(id: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
     queryKey: ['clients', id],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('clients')
         .select('*')
         .eq('id', id)
-        .single()
+      
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query.single()
       
       if (error) throw error
       return data as Client
@@ -40,13 +57,14 @@ export function useClient(id: string) {
 
 export function useCreateClient() {
   const queryClient = useQueryClient()
+  const { workspaceId } = useWorkspace()
   
   return useMutation({
     mutationFn: async (client: ClientInsert) => {
       const supabase = createClient()
       const { data, error } = await supabase
         .from('clients')
-        .insert(client)
+        .insert({ ...client, workspace_id: workspaceId! })
         .select()
         .single()
       

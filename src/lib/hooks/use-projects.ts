@@ -3,10 +3,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { Project, ProjectInsert, ProjectUpdate, ProjectWithClient, ProjectStatus } from '@/types/database'
+import { useWorkspace } from '@/lib/contexts/workspace-context'
 
 export function useProjects(status?: ProjectStatus) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['projects', { status }],
+    queryKey: ['projects', { status, workspaceId }],
     queryFn: async () => {
       const supabase = createClient()
       let query = supabase
@@ -14,6 +17,9 @@ export function useProjects(status?: ProjectStatus) {
         .select('*, clients(*)')
         .order('updated_at', { ascending: false })
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
       if (status) {
         query = query.eq('status', status)
       }
@@ -22,37 +28,54 @@ export function useProjects(status?: ProjectStatus) {
       
       if (error) throw error
       return data as ProjectWithClient[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useActiveProjects() {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['projects', 'active'],
+    queryKey: ['projects', 'active', workspaceId],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('projects')
         .select('*, clients(*)')
         .in('status', ['active', 'on_hold'])
         .order('updated_at', { ascending: false })
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
+      
       if (error) throw error
       return data as ProjectWithClient[]
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useProject(id: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
     queryKey: ['projects', id],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('projects')
         .select('*, clients(*)')
         .eq('id', id)
-        .single()
+      
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query.single()
       
       if (error) throw error
       return data as ProjectWithClient
@@ -113,13 +136,14 @@ export function useProjectStats(id: string) {
 
 export function useCreateProject() {
   const queryClient = useQueryClient()
+  const { workspaceId } = useWorkspace()
   
   return useMutation({
     mutationFn: async (project: ProjectInsert) => {
       const supabase = createClient()
       const { data, error } = await supabase
         .from('projects')
-        .insert(project)
+        .insert({ ...project, workspace_id: workspaceId! })
         .select('*, clients(*)')
         .single()
       

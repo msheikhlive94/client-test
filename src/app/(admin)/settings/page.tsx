@@ -84,14 +84,14 @@ export default function SettingsPage() {
             <div className="space-y-2">
               <Label className="text-zinc-400">Project ID</Label>
               <code className="text-sm text-zinc-300 bg-zinc-900 px-2 py-1 rounded">
-                gpsztpweqkqvalgsckdd
+                {process.env.NEXT_PUBLIC_SUPABASE_URL?.match(/https:\/\/([^.]+)/)?.[1] ?? 'unknown'}
               </code>
             </div>
           </div>
           <div className="space-y-2">
             <Label className="text-zinc-400">URL</Label>
             <code className="text-sm text-zinc-300 bg-zinc-900 px-2 py-1 rounded block">
-              https://gpsztpweqkqvalgsckdd.supabase.co
+              {process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'Not configured'}
             </code>
           </div>
         </CardContent>

@@ -3,19 +3,28 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { Task, TaskInsert, TaskUpdate, TaskStatus, TaskWithAssignee } from '@/types/database'
+import { useWorkspace } from '@/lib/contexts/workspace-context'
 
 export function useTasks(projectId: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
     queryKey: ['tasks', { projectId }],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('tasks')
         .select('*, users(id, email, name)')
         .eq('project_id', projectId)
         .is('parent_task_id', null)
         .order('position')
         .order('created_at', { ascending: false })
+      
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
       
       if (error) throw error
       return data as TaskWithAssignee[]
@@ -25,17 +34,25 @@ export function useTasks(projectId: string) {
 }
 
 export function useTasksByStatus(projectId: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
     queryKey: ['tasks', { projectId, grouped: true }],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('tasks')
         .select('*, users(id, email, name)')
         .eq('project_id', projectId)
         .is('parent_task_id', null)
         .order('position')
         .order('created_at', { ascending: false })
+      
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
       
       if (error) throw error
       
@@ -52,15 +69,23 @@ export function useTasksByStatus(projectId: string) {
 }
 
 export function useSubtasks(parentTaskId: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
     queryKey: ['tasks', 'subtasks', parentTaskId],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('tasks')
         .select('*')
         .eq('parent_task_id', parentTaskId)
         .order('position')
+      
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
       
       if (error) throw error
       return data as Task[]
@@ -70,15 +95,22 @@ export function useSubtasks(parentTaskId: string) {
 }
 
 export function useTask(id: string) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
     queryKey: ['tasks', id],
     queryFn: async () => {
       const supabase = createClient()
-      const { data, error } = await supabase
+      let query = supabase
         .from('tasks')
         .select('*, projects(*)')
         .eq('id', id)
-        .single()
+      
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query.single()
       
       if (error) throw error
       return data
@@ -88,14 +120,16 @@ export function useTask(id: string) {
 }
 
 export function useUpcomingTasks(days: number = 7) {
+  const { workspaceId } = useWorkspace()
+
   return useQuery({
-    queryKey: ['tasks', 'upcoming', days],
+    queryKey: ['tasks', 'upcoming', days, workspaceId],
     queryFn: async () => {
       const supabase = createClient()
       const endDate = new Date()
       endDate.setDate(endDate.getDate() + days)
       
-      const { data, error } = await supabase
+      let query = supabase
         .from('tasks')
         .select('*, projects(id, name, client_id, clients(name))')
         .not('status', 'eq', 'done')
@@ -103,21 +137,30 @@ export function useUpcomingTasks(days: number = 7) {
         .lte('due_date', endDate.toISOString().split('T')[0])
         .order('due_date')
       
+      if (workspaceId) {
+        query = query.eq('workspace_id', workspaceId)
+      }
+      
+      const { data, error } = await query
+      
       if (error) throw error
       return data
-    }
+    },
+    enabled: !!workspaceId
   })
 }
 
 export function useCreateTask() {
   const queryClient = useQueryClient()
+  const { workspaceId } = useWorkspace()
   
   return useMutation({
     mutationFn: async (task: TaskInsert) => {
       const supabase = createClient()
+      const insertData = workspaceId ? { ...task, workspace_id: workspaceId } : task
       const { data, error } = await supabase
         .from('tasks')
-        .insert(task)
+        .insert(insertData)
         .select()
         .single()
       

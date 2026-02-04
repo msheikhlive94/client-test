@@ -59,6 +59,7 @@ export default function OnboardingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [linkWorkspaceId, setLinkWorkspaceId] = useState<string | null>(null)
   
   const [formData, setFormData] = useState({
     company_name: '',
@@ -108,6 +109,11 @@ export default function OnboardingPage() {
       return
     }
     
+    // Store the workspace_id from the intake link for the lead insert
+    if (data.workspace_id) {
+      setLinkWorkspaceId(data.workspace_id)
+    }
+    
     setIsValid(true)
     setIsValidating(false)
   }
@@ -118,24 +124,29 @@ export default function OnboardingPage() {
     try {
       const supabase = createClient()
       
-      // Create lead
+      // Create lead (include workspace_id from the intake link)
+      const leadInsert: Record<string, unknown> = {
+        company_name: formData.company_name,
+        contact_name: formData.contact_name,
+        email: formData.email,
+        phone: formData.phone || null,
+        website: formData.website || null,
+        project_type: formData.project_type || 'other',
+        project_description: formData.project_description || null,
+        budget_range: formData.budget_range || null,
+        timeline: formData.timeline || null,
+        source: formData.source || null,
+        referral: formData.referral || null,
+        intake_token: token,
+        token_used_at: new Date().toISOString()
+      }
+      if (linkWorkspaceId) {
+        leadInsert.workspace_id = linkWorkspaceId
+      }
+
       const { error: leadError } = await supabase
         .from('leads')
-        .insert({
-          company_name: formData.company_name,
-          contact_name: formData.contact_name,
-          email: formData.email,
-          phone: formData.phone || null,
-          website: formData.website || null,
-          project_type: formData.project_type || 'other',
-          project_description: formData.project_description || null,
-          budget_range: formData.budget_range || null,
-          timeline: formData.timeline || null,
-          source: formData.source || null,
-          referral: formData.referral || null,
-          intake_token: token,
-          token_used_at: new Date().toISOString()
-        })
+        .insert(leadInsert)
       
       if (leadError) throw leadError
       
