@@ -3,7 +3,11 @@ import fs from 'fs'
 import path from 'path'
 import { appConfig } from '@/lib/config/theme'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+function getResend() {
+  const key = process.env.RESEND_API_KEY
+  if (!key) throw new Error('RESEND_API_KEY is not set')
+  return new Resend(key)
+}
 
 export async function sendInvitationEmail(
   to: string,
@@ -28,7 +32,7 @@ export async function sendInvitationEmail(
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: appConfig.emailFrom,
         to,
         subject: `You're invited to ${clientName} Client Portal`,
@@ -57,7 +61,7 @@ export async function sendWelcomeEmail(
   clientName: string
 ): Promise<void> {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: appConfig.emailFrom,
       to,
       subject: `Welcome to ${appConfig.name} Client Portal`,

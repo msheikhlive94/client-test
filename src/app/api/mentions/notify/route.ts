@@ -7,7 +7,11 @@ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || ''
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || ''
 const MCP_EMAIL = process.env.MCP_NOTIFICATION_EMAIL || ''
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+function getResend() {
+  const key = process.env.RESEND_API_KEY
+  if (!key) throw new Error('RESEND_API_KEY is not set')
+  return new Resend(key)
+}
 
 interface MentionNotifyRequest {
   comment_id: string
@@ -251,7 +255,7 @@ async function sendEmailNotification({
 }) {
   const appUrl = appConfig.url
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: appConfig.emailFrom,
     to,
     subject: `${authorName} mentioned you in "${taskTitle}" — ${appConfig.name}`,
