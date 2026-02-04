@@ -1,0 +1,20 @@
+{
+  "name": "zflow-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for z-flow project management",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "zflow-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["mcp", "project-management", "z-flow"],
+  "author": "z-flow",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}
