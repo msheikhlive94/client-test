@@ -15,18 +15,18 @@ interface HeaderProps {
 
 export function Header({ title, subtitle, action }: HeaderProps) {
   return (
-    <header className="flex h-16 items-center justify-between border-b border-zinc-200 bg-white px-6 dark:border-zinc-800 dark:bg-zinc-950">
+    <header className="flex h-16 items-center justify-between border-b border-border-default bg-surface-raised px-6">
       <div>
-        <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">{title}</h1>
+        <h1 className="text-xl font-semibold text-text-primary">{title}</h1>
         {subtitle && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{subtitle}</p>
+          <p className="text-sm text-text-secondary">{subtitle}</p>
         )}
       </div>
       
       <div className="flex items-center gap-4">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
           <Input
             type="search"
             placeholder="Search..."
@@ -35,7 +35,7 @@ export function Header({ title, subtitle, action }: HeaderProps) {
         </div>
         
         {action && (
-          <Button onClick={action.onClick} className="bg-emerald-600 hover:bg-emerald-700">
+          <Button onClick={action.onClick} className="bg-brand hover:bg-brand-hover text-white">
             <Plus className="mr-2 h-4 w-4" />
             {action.label}
           </Button>

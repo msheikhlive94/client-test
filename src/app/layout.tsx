@@ -17,8 +17,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-zinc-900`}>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        {/* Inline script to prevent FOUC — reads localStorage before paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var mode = localStorage.getItem('taskflow-theme-mode') || 'dark';
+                  var resolved = mode;
+                  if (mode === 'system') {
+                    resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  if (resolved === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className={`${inter.className}`}>
         <Providers>
           {children}
         </Providers>

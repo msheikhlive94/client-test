@@ -65,7 +65,7 @@ function SignupForm() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
+        <Loader2 className="h-8 w-8 text-brand animate-spin" />
       </div>
     )
   }
@@ -73,18 +73,18 @@ function SignupForm() {
   if (submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+        <Card className="w-full max-w-md bg-surface-raised border-border-default">
           <CardContent className="pt-6 text-center">
             <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+              <CheckCircle2 className="h-8 w-8 text-brand" />
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Check Your Email</h2>
-            <p className="text-zinc-400">
+            <h2 className="text-xl font-semibold text-text-primary mb-2">Check Your Email</h2>
+            <p className="text-text-secondary">
               We&apos;ve sent a confirmation link to <strong>{email}</strong>. 
               Click the link to activate your account.
             </p>
             <Link href="/portal/login">
-              <Button className="mt-6 bg-emerald-600 hover:bg-emerald-700">
+              <Button className="mt-6 bg-brand hover:bg-brand-hover text-white">
                 Back to Login
               </Button>
             </Link>
@@ -96,14 +96,14 @@ function SignupForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+      <Card className="w-full max-w-md bg-surface-raised border-border-default">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Image src={appConfig.logo} alt={appConfig.name} width={32} height={32} className="h-8 w-8" />
-            <span className="text-2xl font-bold text-white">{appConfig.name}</span>
+            <span className="text-2xl font-bold text-text-primary">{appConfig.name}</span>
           </div>
-          <CardTitle className="text-white">Create Account</CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardTitle className="text-text-primary">Create Account</CardTitle>
+          <CardDescription className="text-text-secondary">
             Sign up to access the client portal
           </CardDescription>
         </CardHeader>
@@ -116,7 +116,7 @@ function SignupForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
@@ -127,7 +127,7 @@ function SignupForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
@@ -138,13 +138,13 @@ function SignupForm() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
             <Button
               type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700"
+              className="w-full bg-brand hover:bg-brand-hover text-white"
               disabled={signUp.isPending}
             >
               {signUp.isPending ? (
@@ -154,11 +154,11 @@ function SignupForm() {
               )}
             </Button>
           </form>
-          <p className="text-center text-sm text-zinc-500 mt-4">
+          <p className="text-center text-sm text-text-muted mt-4">
             Already have an account?{' '}
             <Link 
               href={redirect ? `/portal/login?redirect=${redirect}` : '/portal/login'} 
-              className="text-emerald-500 hover:underline"
+              className="text-brand hover:underline"
             >
               Sign in
             </Link>
@@ -173,7 +173,7 @@ export default function PortalSignupPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
+        <Loader2 className="h-8 w-8 text-brand animate-spin" />
       </div>
     }>
       <SignupForm />

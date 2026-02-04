@@ -31,7 +31,7 @@ const columns: Array<{ id: TaskStatus; title: string; color: string }> = [
   { id: 'todo', title: 'To Do', color: 'bg-zinc-500' },
   { id: 'in_progress', title: 'In Progress', color: 'bg-blue-500' },
   { id: 'review', title: 'Review', color: 'bg-purple-500' },
-  { id: 'done', title: 'Done', color: 'bg-emerald-500' }
+  { id: 'done', title: 'Done', color: 'bg-brand' }
 ]
 
 export function KanbanBoard({ projectId, onTaskClick, onAddTask }: KanbanBoardProps) {
@@ -191,7 +191,7 @@ export function KanbanBoard({ projectId, onTaskClick, onAddTask }: KanbanBoardPr
         {columns.map(column => (
           <div
             key={column.id}
-            className="h-[500px] rounded-2xl bg-zinc-900/50 animate-pulse"
+            className="h-[500px] rounded-2xl bg-input-bg/50 animate-pulse"
           />
         ))}
       </div>

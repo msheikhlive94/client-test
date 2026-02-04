@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Loader2, AlertCircle } from 'lucide-react'
 import Image from 'next/image'
 import { appConfig } from '@/lib/config/theme'
+import { useWorkspaceBranding } from '@/lib/contexts/workspace-context'
 
 function LoginForm() {
   const router = useRouter()
@@ -19,6 +20,7 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [isCheckingSetup, setIsCheckingSetup] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { logoUrl } = useWorkspaceBranding()
 
   const unauthorizedError = searchParams.get('error') === 'unauthorized'
 
@@ -42,8 +44,8 @@ function LoginForm() {
 
   if (isCheckingSetup) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+      <div className="min-h-screen bg-page-bg flex items-center justify-center p-4">
+        <Loader2 className="h-8 w-8 animate-spin text-brand" />
       </div>
     )
   }
@@ -96,15 +98,19 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+    <div className="min-h-screen bg-page-bg flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-surface-raised border-border-default">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Image src={appConfig.logo} alt={appConfig.name} width={32} height={32} className="h-8 w-8" />
-            <span className="text-2xl font-bold text-white">{appConfig.name}</span>
+            {logoUrl ? (
+              <img src={logoUrl} alt={appConfig.name} className="h-8 w-8 object-contain rounded" />
+            ) : (
+              <Image src={appConfig.logo} alt={appConfig.name} width={32} height={32} className="h-8 w-8" />
+            )}
+            <span className="text-2xl font-bold text-text-primary">{appConfig.name}</span>
           </div>
-          <CardTitle className="text-white">Admin Login</CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardTitle className="text-text-primary">Admin Login</CardTitle>
+          <CardDescription className="text-text-secondary">
             Sign in to access the dashboard
           </CardDescription>
         </CardHeader>
@@ -127,7 +133,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@example.com"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-input-bg border-border-default"
                 required
               />
             </div>
@@ -140,7 +146,7 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-input-bg border-border-default"
                 required
               />
             </div>
@@ -148,7 +154,7 @@ function LoginForm() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-emerald-600 hover:bg-emerald-700"
+              className="w-full bg-brand hover:bg-brand-hover text-white"
             >
               {isLoading ? (
                 <>
@@ -169,8 +175,8 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+      <div className="min-h-screen bg-page-bg flex items-center justify-center p-4">
+        <Loader2 className="h-8 w-8 animate-spin text-brand" />
       </div>
     }>
       <LoginForm />

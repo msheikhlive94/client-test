@@ -191,25 +191,25 @@ export default function OnboardingPage() {
 
   if (isValidating) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
+      <div className="min-h-screen bg-page-bg flex items-center justify-center">
+        <Loader2 className="h-8 w-8 text-brand animate-spin" />
       </div>
     )
   }
 
   if (error && !isValid) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <Card className="max-w-md w-full bg-zinc-900 border-zinc-800">
+      <div className="min-h-screen bg-page-bg flex items-center justify-center p-4">
+        <Card className="max-w-md w-full bg-surface-raised border-border-default">
           <CardContent className="pt-6 text-center">
             <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
               <span className="text-3xl">😕</span>
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Link Not Valid</h2>
-            <p className="text-zinc-400">{error}</p>
-            <p className="text-sm text-zinc-500 mt-4">
+            <h2 className="text-xl font-semibold text-text-primary mb-2">Link Not Valid</h2>
+            <p className="text-text-secondary">{error}</p>
+            <p className="text-sm text-text-muted mt-4">
               Please contact us directly at{' '}
-              <a href={`mailto:${appConfig.supportEmail}`} className="text-emerald-500 hover:underline">
+              <a href={`mailto:${appConfig.supportEmail}`} className="text-brand hover:underline">
                 {appConfig.supportEmail}
               </a>
             </p>
@@ -221,29 +221,29 @@ export default function OnboardingPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <Card className="max-w-md w-full bg-zinc-900 border-zinc-800">
+      <div className="min-h-screen bg-page-bg flex items-center justify-center p-4">
+        <Card className="max-w-md w-full bg-surface-raised border-border-default">
           <CardContent className="pt-6 text-center">
             <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+              <CheckCircle2 className="h-8 w-8 text-brand" />
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Thank You!</h2>
-            <p className="text-zinc-400">
+            <h2 className="text-xl font-semibold text-text-primary mb-2">Thank You!</h2>
+            <p className="text-text-secondary">
               Your inquiry has been submitted successfully. We&apos;ll review your project details and get back to you within 24-48 hours.
             </p>
             <div className="mt-6 p-4 rounded-lg bg-zinc-800 text-left">
-              <p className="text-sm text-zinc-400 mb-2">What happens next?</p>
-              <ol className="text-sm text-zinc-300 space-y-2">
+              <p className="text-sm text-text-secondary mb-2">What happens next?</p>
+              <ol className="text-sm text-text-primary space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-500 text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                  <span className="h-5 w-5 rounded-full bg-emerald-500/20 text-brand text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
                   We&apos;ll review your project requirements
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-500 text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                  <span className="h-5 w-5 rounded-full bg-emerald-500/20 text-brand text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
                   Schedule a call to discuss details
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-500 text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                  <span className="h-5 w-5 rounded-full bg-emerald-500/20 text-brand text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
                   Receive a tailored proposal
                 </li>
               </ol>
@@ -255,16 +255,16 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 py-8 px-4">
+    <div className="min-h-screen bg-page-bg py-8 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Image src={appConfig.logo} alt={appConfig.name} width={32} height={32} className="h-8 w-8" />
-            <span className="text-2xl font-bold text-white">{appConfig.name}</span>
+            <span className="text-2xl font-bold text-text-primary">{appConfig.name}</span>
           </div>
-          <h1 className="text-2xl font-semibold text-white">Let&apos;s Build Something Great</h1>
-          <p className="text-zinc-400 mt-2">Tell us about your project and we&apos;ll get back to you soon.</p>
+          <h1 className="text-2xl font-semibold text-text-primary">Let&apos;s Build Something Great</h1>
+          <p className="text-text-secondary mt-2">Tell us about your project and we&apos;ll get back to you soon.</p>
         </div>
 
         {/* Progress */}
@@ -281,14 +281,14 @@ export default function OnboardingPage() {
         </div>
 
         {/* Form Card */}
-        <Card className="bg-zinc-900 border-zinc-800">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader>
-            <CardTitle className="text-white">
+            <CardTitle className="text-text-primary">
               {step === 1 && 'About You'}
               {step === 2 && 'Your Project'}
               {step === 3 && 'Budget & Timeline'}
             </CardTitle>
-            <CardDescription className="text-zinc-400">
+            <CardDescription className="text-text-secondary">
               {step === 1 && 'Who are we working with?'}
               {step === 2 && 'What are you looking to build?'}
               {step === 3 && 'Help us understand your constraints'}
@@ -304,7 +304,7 @@ export default function OnboardingPage() {
                     value={formData.company_name}
                     onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
                     placeholder="Your company"
-                    className="bg-zinc-800 border-zinc-700"
+                    className="bg-zinc-800 border-border-default"
                   />
                 </div>
                 <div className="space-y-2">
@@ -313,7 +313,7 @@ export default function OnboardingPage() {
                     value={formData.contact_name}
                     onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
                     placeholder="John Doe"
-                    className="bg-zinc-800 border-zinc-700"
+                    className="bg-zinc-800 border-border-default"
                   />
                 </div>
                 <div className="space-y-2">
@@ -323,7 +323,7 @@ export default function OnboardingPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="john@company.com"
-                    className="bg-zinc-800 border-zinc-700"
+                    className="bg-zinc-800 border-border-default"
                   />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -333,7 +333,7 @@ export default function OnboardingPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+49 123 456789"
-                      className="bg-zinc-800 border-zinc-700"
+                      className="bg-zinc-800 border-border-default"
                     />
                   </div>
                   <div className="space-y-2">
@@ -342,7 +342,7 @@ export default function OnboardingPage() {
                       value={formData.website}
                       onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                       placeholder="www.company.com"
-                      className="bg-zinc-800 border-zinc-700"
+                      className="bg-zinc-800 border-border-default"
                     />
                   </div>
                 </div>
@@ -363,11 +363,11 @@ export default function OnboardingPage() {
                           'p-4 rounded-lg border cursor-pointer transition-colors',
                           formData.project_type === type.value
                             ? 'border-emerald-500 bg-emerald-500/10'
-                            : 'border-zinc-700 bg-zinc-800 hover:border-zinc-600'
+                            : 'border-border-default bg-zinc-800 hover:border-zinc-600'
                         )}
                       >
-                        <p className="font-medium text-white">{type.label}</p>
-                        <p className="text-sm text-zinc-400">{type.description}</p>
+                        <p className="font-medium text-text-primary">{type.label}</p>
+                        <p className="text-sm text-text-secondary">{type.description}</p>
                       </div>
                     ))}
                   </div>
@@ -378,7 +378,7 @@ export default function OnboardingPage() {
                     value={formData.project_description}
                     onChange={(e) => setFormData({ ...formData, project_description: e.target.value })}
                     placeholder="What problem are you trying to solve? What's your vision?"
-                    className="bg-zinc-800 border-zinc-700 min-h-[120px]"
+                    className="bg-zinc-800 border-border-default min-h-[120px]"
                   />
                 </div>
               </>
@@ -393,10 +393,10 @@ export default function OnboardingPage() {
                     value={formData.budget_range}
                     onValueChange={(v) => setFormData({ ...formData, budget_range: v })}
                   >
-                    <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                    <SelectTrigger className="bg-zinc-800 border-border-default">
                       <SelectValue placeholder="Select budget range" />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-800 border-zinc-700">
+                    <SelectContent className="bg-zinc-800 border-border-default">
                       {budgetRanges.map((range) => (
                         <SelectItem key={range.value} value={range.value}>
                           {range.label}
@@ -411,10 +411,10 @@ export default function OnboardingPage() {
                     value={formData.timeline}
                     onValueChange={(v) => setFormData({ ...formData, timeline: v })}
                   >
-                    <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                    <SelectTrigger className="bg-zinc-800 border-border-default">
                       <SelectValue placeholder="When do you need this?" />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-800 border-zinc-700">
+                    <SelectContent className="bg-zinc-800 border-border-default">
                       {timelines.map((t) => (
                         <SelectItem key={t.value} value={t.value}>
                           {t.label}
@@ -429,7 +429,7 @@ export default function OnboardingPage() {
                     value={formData.source}
                     onChange={(e) => setFormData({ ...formData, source: e.target.value })}
                     placeholder="Google, LinkedIn, Referral..."
-                    className="bg-zinc-800 border-zinc-700"
+                    className="bg-zinc-800 border-border-default"
                   />
                 </div>
               </>
@@ -441,7 +441,7 @@ export default function OnboardingPage() {
                 <Button
                   variant="outline"
                   onClick={prevStep}
-                  className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                  className="border-border-default text-text-primary hover:bg-zinc-800"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back
@@ -454,7 +454,7 @@ export default function OnboardingPage() {
                 <Button
                   onClick={nextStep}
                   disabled={!canProceed()}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-brand hover:bg-brand-hover text-white"
                 >
                   Continue
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -463,7 +463,7 @@ export default function OnboardingPage() {
                 <Button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-brand hover:bg-brand-hover text-white"
                 >
                   {isSubmitting ? (
                     <>
@@ -483,9 +483,9 @@ export default function OnboardingPage() {
         </Card>
 
         {/* Footer */}
-        <p className="text-center text-sm text-zinc-500 mt-6">
+        <p className="text-center text-sm text-text-muted mt-6">
           Questions? Email us at{' '}
-          <a href={`mailto:${appConfig.supportEmail}`} className="text-emerald-500 hover:underline">
+          <a href={`mailto:${appConfig.supportEmail}`} className="text-brand hover:underline">
             {appConfig.supportEmail}
           </a>
         </p>

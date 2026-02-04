@@ -20,7 +20,7 @@ const noteTypeColors: Record<NoteType, string> = {
   general: 'bg-zinc-500',
   meeting: 'bg-blue-500',
   technical: 'bg-purple-500',
-  decision: 'bg-emerald-500'
+  decision: 'bg-brand'
 }
 
 const noteTypeLabels: Record<NoteType, string> = {
@@ -62,7 +62,7 @@ export function NotesTab({ projectId }: NotesTabProps) {
   }
 
   return (
-    <Card className="bg-zinc-800 border-zinc-700">
+    <Card className="bg-surface-raised border-border-default">
       <CardContent className="p-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -75,8 +75,8 @@ export function NotesTab({ projectId }: NotesTabProps) {
                 onClick={() => setTypeFilter(type)}
                 className={cn(
                   typeFilter === type
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : 'border-zinc-700 text-zinc-400 hover:bg-zinc-700'
+                    ? 'bg-brand hover:bg-brand-hover text-white'
+                    : 'border-border-default text-text-secondary hover:bg-surface-hover'
                 )}
               >
                 {type === 'all' ? 'All' : noteTypeLabels[type]}
@@ -85,7 +85,7 @@ export function NotesTab({ projectId }: NotesTabProps) {
           </div>
           <Button
             onClick={handleNewNote}
-            className="bg-emerald-600 hover:bg-emerald-700"
+            className="bg-brand hover:bg-brand-hover text-white"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Note
@@ -94,14 +94,14 @@ export function NotesTab({ projectId }: NotesTabProps) {
 
         {/* Notes List */}
         {isLoading ? (
-          <div className="text-zinc-400 py-8 text-center">Loading notes...</div>
+          <div className="text-text-secondary py-8 text-center">Loading notes...</div>
         ) : filteredNotes?.length === 0 ? (
           <div className="text-center py-12">
-            <FileText className="mx-auto h-12 w-12 text-zinc-600" />
-            <p className="mt-2 text-zinc-400">No notes yet</p>
+            <FileText className="mx-auto h-12 w-12 text-text-muted" />
+            <p className="mt-2 text-text-secondary">No notes yet</p>
             <Button
               onClick={handleNewNote}
-              className="mt-4 bg-emerald-600 hover:bg-emerald-700"
+              className="mt-4 bg-brand hover:bg-brand-hover text-white"
             >
               <Plus className="mr-2 h-4 w-4" />
               Add First Note
@@ -113,26 +113,26 @@ export function NotesTab({ projectId }: NotesTabProps) {
               <div
                 key={note.id}
                 onClick={() => handleEdit(note)}
-                className="p-4 rounded-lg bg-zinc-900 hover:bg-zinc-850 cursor-pointer group"
+                className="p-4 rounded-lg bg-input-bg hover:bg-surface-hover cursor-pointer group"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <Badge 
                         className={cn(
-                          'text-xs text-white border-0',
+                          'text-xs text-text-primary border-0',
                           noteTypeColors[note.note_type]
                         )}
                       >
                         {noteTypeLabels[note.note_type]}
                       </Badge>
-                      <span className="text-xs text-zinc-500">
+                      <span className="text-xs text-text-muted">
                         {format(new Date(note.created_at), 'MMM d, yyyy')}
                       </span>
                     </div>
-                    <h3 className="font-medium text-white mb-1">{note.title}</h3>
+                    <h3 className="font-medium text-text-primary mb-1">{note.title}</h3>
                     {note.content && (
-                      <p className="text-sm text-zinc-400 line-clamp-3">
+                      <p className="text-sm text-text-secondary line-clamp-3">
                         {note.content}
                       </p>
                     )}
@@ -144,7 +144,7 @@ export function NotesTab({ projectId }: NotesTabProps) {
                       e.stopPropagation()
                       handleDelete(note)
                     }}
-                    className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-500 hover:bg-transparent"
+                    className="opacity-0 group-hover:opacity-100 text-text-secondary hover:text-red-500 hover:bg-transparent"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

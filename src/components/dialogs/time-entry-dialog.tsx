@@ -105,7 +105,7 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white">
+      <DialogContent className="bg-surface-raised border-border-default text-text-primary">
         <DialogHeader>
           <DialogTitle>{entry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
         </DialogHeader>
@@ -117,7 +117,7 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="What did you work on?"
-              className="bg-zinc-800 border-zinc-700 min-h-[80px]"
+              className="bg-surface-raised border-border-default min-h-[80px]"
             />
           </div>
 
@@ -129,7 +129,7 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
                 min="0"
                 value={formData.hours}
                 onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 placeholder="0"
               />
             </div>
@@ -142,7 +142,7 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
                 max="59"
                 value={formData.minutes}
                 onChange={(e) => setFormData({ ...formData, minutes: e.target.value })}
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 placeholder="0"
               />
             </div>
@@ -153,7 +153,7 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
@@ -166,10 +166,10 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
                 value={formData.task_id}
                 onValueChange={(v) => setFormData({ ...formData, task_id: v })}
               >
-                <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                <SelectTrigger className="bg-surface-raised border-border-default">
                   <SelectValue placeholder="Select a task" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectContent className="bg-surface-raised border-border-default">
                   <SelectItem value="">No task</SelectItem>
                   {tasks.map((task) => (
                     <SelectItem key={task.id} value={task.id}>
@@ -181,10 +181,10 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
             </div>
           )}
 
-          <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-800">
+          <div className="flex items-center justify-between p-3 rounded-lg bg-surface-raised">
             <div>
-              <Label className="text-white">Billable</Label>
-              <p className="text-sm text-zinc-400">Include this time in invoicing</p>
+              <Label className="text-text-primary">Billable</Label>
+              <p className="text-sm text-text-secondary">Include this time in invoicing</p>
             </div>
             <Switch
               checked={formData.billable}
@@ -197,13 +197,13 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+              className="border-border-default text-text-primary hover:bg-surface-raised"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-brand hover:bg-brand-hover text-white"
               disabled={createEntry.isPending || updateEntry.isPending}
             >
               {entry ? 'Update' : 'Log'} Time

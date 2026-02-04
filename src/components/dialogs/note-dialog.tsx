@@ -79,7 +79,7 @@ export function NoteDialog({ open, onOpenChange, projectId, note }: NoteDialogPr
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl">
+      <DialogContent className="bg-surface-raised border-border-default text-text-primary max-w-2xl">
         <DialogHeader>
           <DialogTitle>{note ? 'Edit Note' : 'New Note'}</DialogTitle>
         </DialogHeader>
@@ -92,7 +92,7 @@ export function NoteDialog({ open, onOpenChange, projectId, note }: NoteDialogPr
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="Meeting notes - Jan 30"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
@@ -103,10 +103,10 @@ export function NoteDialog({ open, onOpenChange, projectId, note }: NoteDialogPr
                 value={formData.note_type}
                 onValueChange={(v) => setFormData({ ...formData, note_type: v as NoteType })}
               >
-                <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                <SelectTrigger className="bg-surface-raised border-border-default">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectContent className="bg-surface-raised border-border-default">
                   <SelectItem value="general">General</SelectItem>
                   <SelectItem value="meeting">Meeting</SelectItem>
                   <SelectItem value="technical">Technical</SelectItem>
@@ -122,7 +122,7 @@ export function NoteDialog({ open, onOpenChange, projectId, note }: NoteDialogPr
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               placeholder="Write your notes here... (Markdown supported)"
-              className="bg-zinc-800 border-zinc-700 min-h-[200px] font-mono text-sm"
+              className="bg-surface-raised border-border-default min-h-[200px] font-mono text-sm"
             />
           </div>
 
@@ -131,13 +131,13 @@ export function NoteDialog({ open, onOpenChange, projectId, note }: NoteDialogPr
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+              className="border-border-default text-text-primary hover:bg-surface-raised"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-brand hover:bg-brand-hover text-white"
               disabled={createNote.isPending || updateNote.isPending}
             >
               {note ? 'Update' : 'Create'} Note

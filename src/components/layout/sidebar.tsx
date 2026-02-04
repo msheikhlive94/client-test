@@ -11,19 +11,18 @@ import {
   Clock,
   FileText,
   Settings,
-  Zap,
-  UserPlus,
   Menu,
-  X
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { appConfig } from '@/lib/config/theme'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { useWorkspaceBranding } from '@/lib/contexts/workspace-context'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Leads', href: '/leads', icon: UserPlus },
+  { name: 'Leads', href: '/leads', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderKanban },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Time', href: '/time', icon: Clock },
@@ -32,13 +31,18 @@ const navigation = [
 
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
+  const { logoUrl } = useWorkspaceBranding()
 
   return (
     <>
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2 px-6 border-b border-zinc-800">
-        <Image src={appConfig.logo} alt={appConfig.name} width={32} height={32} className="h-8 w-8" />
-        <span className="text-xl font-bold">{appConfig.name}</span>
+      <div className="flex h-16 items-center gap-2 px-6 border-b border-border-default">
+        {logoUrl ? (
+          <img src={logoUrl} alt={appConfig.name} className="h-8 w-8 object-contain rounded" />
+        ) : (
+          <Image src={appConfig.logo} alt={appConfig.name} width={32} height={32} className="h-8 w-8" />
+        )}
+        <span className="text-xl font-bold text-text-primary">{appConfig.name}</span>
       </div>
 
       {/* Navigation */}
@@ -55,8 +59,8 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
               className={cn(
                 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 isActive
-                  ? 'bg-emerald-500/10 text-emerald-500'
-                  : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                  ? 'bg-brand-muted text-brand'
+                  : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'
               )}
             >
               <item.icon className="h-5 w-5" />
@@ -66,16 +70,20 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
         })}
       </nav>
 
-      {/* Settings */}
-      <div className="border-t border-zinc-800 p-3">
+      {/* Bottom section: theme toggle + settings */}
+      <div className="border-t border-border-default p-3 space-y-1">
+        <div className="flex items-center justify-between px-3 py-1">
+          <span className="text-xs text-text-muted">Theme</span>
+          <ThemeToggle />
+        </div>
         <Link
           href="/settings"
           onClick={onNavigate}
           className={cn(
             'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
             pathname === '/settings'
-              ? 'bg-emerald-500/10 text-emerald-500'
-              : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+              ? 'bg-brand-muted text-brand'
+              : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'
           )}
         >
           <Settings className="h-5 w-5" />
@@ -89,7 +97,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
 // Desktop Sidebar
 export function Sidebar() {
   return (
-    <div className="hidden lg:flex h-full w-64 flex-col bg-zinc-950 text-white">
+    <div className="hidden lg:flex h-full w-64 flex-col bg-sidebar-bg">
       <NavContent />
     </div>
   )
@@ -98,22 +106,27 @@ export function Sidebar() {
 // Mobile Header with hamburger menu
 export function MobileHeader() {
   const [open, setOpen] = useState(false)
+  const { logoUrl } = useWorkspaceBranding()
 
   return (
-    <div className="lg:hidden flex items-center justify-between h-14 px-4 bg-zinc-950 border-b border-zinc-800">
+    <div className="lg:hidden flex items-center justify-between h-14 px-4 bg-sidebar-bg border-b border-border-default">
       <div className="flex items-center gap-2">
-        <Image src={appConfig.logo} alt={appConfig.name} width={24} height={24} className="h-6 w-6" />
-        <span className="text-lg font-bold text-white">{appConfig.name}</span>
+        {logoUrl ? (
+          <img src={logoUrl} alt={appConfig.name} className="h-6 w-6 object-contain rounded" />
+        ) : (
+          <Image src={appConfig.logo} alt={appConfig.name} width={24} height={24} className="h-6 w-6" />
+        )}
+        <span className="text-lg font-bold text-text-primary">{appConfig.name}</span>
       </div>
       
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-zinc-800">
+          <Button variant="ghost" size="icon" className="text-text-primary hover:bg-surface-hover">
             <Menu className="h-6 w-6" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-0 bg-zinc-950 border-zinc-800">
-          <div className="flex h-full flex-col text-white">
+        <SheetContent side="left" className="w-64 p-0 bg-sidebar-bg border-border-default">
+          <div className="flex h-full flex-col">
             <NavContent onNavigate={() => setOpen(false)} />
           </div>
         </SheetContent>

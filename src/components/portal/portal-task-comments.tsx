@@ -104,11 +104,11 @@ export function PortalTaskComments({
   const commentCount = comments?.length || 0
 
   return (
-    <div className="border-t border-zinc-700/50 mt-2">
+    <div className="border-t border-border-default/50 mt-2">
       {/* Toggle Button */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between py-2 px-1 text-sm text-zinc-400 hover:text-zinc-300 transition-colors"
+        className="w-full flex items-center justify-between py-2 px-1 text-sm text-text-secondary hover:text-text-primary transition-colors"
       >
         <span>
           {commentCount} comment{commentCount !== 1 ? 's' : ''}
@@ -126,10 +126,10 @@ export function PortalTaskComments({
           {/* Comments List */}
           {isLoading ? (
             <div className="flex items-center justify-center py-4">
-              <Loader2 className="h-4 w-4 text-zinc-500 animate-spin" />
+              <Loader2 className="h-4 w-4 text-text-muted animate-spin" />
             </div>
           ) : !comments?.length ? (
-            <p className="text-xs text-zinc-500 text-center py-2">
+            <p className="text-xs text-text-muted text-center py-2">
               No comments yet
             </p>
           ) : (
@@ -143,7 +143,7 @@ export function PortalTaskComments({
                     key={comment.id}
                     className={cn(
                       'group flex gap-2 p-2 rounded-md text-sm',
-                      isAdmin ? 'bg-emerald-950/30' : 'bg-zinc-700/30'
+                      isAdmin ? 'bg-emerald-950/30' : 'bg-surface-hover/30'
                     )}
                   >
                     <Avatar className="h-6 w-6 shrink-0">
@@ -151,8 +151,8 @@ export function PortalTaskComments({
                         className={cn(
                           'text-[10px] font-medium',
                           isAdmin
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-blue-600 text-white'
+                            ? 'bg-emerald-600 text-text-primary'
+                            : 'bg-blue-600 text-text-primary'
                         )}
                       >
                         {getInitials(comment.author_name)}
@@ -161,19 +161,19 @@ export function PortalTaskComments({
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                        <span className="text-xs font-medium text-zinc-300 truncate max-w-[120px] sm:max-w-none">
+                        <span className="text-xs font-medium text-text-primary truncate max-w-[120px] sm:max-w-none">
                           {comment.author_name || 'Unknown'}
                         </span>
                         {isAdmin && (
-                          <span className="text-[9px] font-medium uppercase px-1 py-0.5 rounded bg-emerald-600/30 text-emerald-400 shrink-0">
+                          <span className="text-[9px] font-medium uppercase px-1 py-0.5 rounded bg-emerald-600/30 text-brand shrink-0">
                             Team
                           </span>
                         )}
-                        <span className="text-[10px] text-zinc-500 shrink-0">
+                        <span className="text-[10px] text-text-muted shrink-0">
                           {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-300 whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
+                      <p className="text-xs text-text-primary whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                         {renderCommentWithMentions(comment.content)}
                       </p>
                     </div>
@@ -184,7 +184,7 @@ export function PortalTaskComments({
                         variant="ghost"
                         onClick={() => handleDelete(comment.id)}
                         disabled={deleteComment.isPending}
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-red-400"
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 text-text-muted hover:text-red-400"
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -203,7 +203,7 @@ export function PortalTaskComments({
               onMentionsChange={setPendingMentions}
               users={mentionUsers || []}
               placeholder="Add a comment... (use @ to mention)"
-              className="bg-zinc-900 border-zinc-700 text-xs min-h-[50px] resize-none"
+              className="bg-input-bg border-border-default text-xs min-h-[50px] resize-none"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                   e.preventDefault()
@@ -215,7 +215,7 @@ export function PortalTaskComments({
               onClick={handleSubmit}
               disabled={!newComment.trim() || createComment.isPending}
               size="sm"
-              className="h-auto bg-emerald-600 hover:bg-emerald-700 px-2"
+              className="h-auto bg-brand hover:bg-brand-hover text-white px-2"
             >
               {createComment.isPending ? (
                 <Loader2 className="h-3 w-3 animate-spin" />

@@ -33,7 +33,7 @@ export function KanbanColumn({
       className={cn(
         'flex flex-col h-full min-h-[500px]',
         'rounded-2xl',
-        'border border-zinc-800/80',
+        'border border-border-default/80',
         'bg-gradient-to-b from-zinc-900/80 to-zinc-900/40',
         'backdrop-blur-md',
         'transition-all duration-300 ease-out',
@@ -56,14 +56,14 @@ export function KanbanColumn({
             color.replace('bg-', 'ring-').replace('-500', '-500/50')
           )} />
           {/* Title */}
-          <h3 className="text-sm font-semibold text-zinc-200 tracking-tight">
+          <h3 className="text-sm font-semibold text-text-primary tracking-tight">
             {title}
           </h3>
           {/* Count badge */}
           <span className={cn(
             'px-2 py-0.5 rounded-full text-xs font-medium',
-            'bg-zinc-800 text-zinc-400',
-            'border border-zinc-700/50'
+            'bg-surface-raised text-text-secondary',
+            'border border-border-default/50'
           )}>
             {tasks.length}
           </span>
@@ -76,8 +76,8 @@ export function KanbanColumn({
           onClick={onAddTask}
           className={cn(
             'h-7 w-7 p-0',
-            'text-zinc-500 hover:text-zinc-200',
-            'hover:bg-zinc-800/80',
+            'text-text-muted hover:text-text-primary',
+            'hover:bg-surface-raised/80',
             'rounded-lg',
             'transition-colors duration-150'
           )}
@@ -123,9 +123,9 @@ export function KanbanColumn({
               'transition-colors duration-200',
               isOver
                 ? 'border-emerald-500/40 bg-emerald-950/10'
-                : 'border-zinc-800/60'
+                : 'border-border-default/60'
             )}>
-              <p className="text-xs text-zinc-600 text-center">
+              <p className="text-xs text-text-muted text-center">
                 {isOver ? 'Drop here' : 'No tasks'}
               </p>
             </div>

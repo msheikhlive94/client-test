@@ -50,21 +50,21 @@ function LoginForm() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
+        <Loader2 className="h-8 w-8 text-brand animate-spin" />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+      <Card className="w-full max-w-md bg-surface-raised border-border-default">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Image src={appConfig.logo} alt={appConfig.name} width={32} height={32} className="h-8 w-8" />
-            <span className="text-2xl font-bold text-white">{appConfig.name}</span>
+            <span className="text-2xl font-bold text-text-primary">{appConfig.name}</span>
           </div>
-          <CardTitle className="text-white">Client Portal</CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardTitle className="text-text-primary">Client Portal</CardTitle>
+          <CardDescription className="text-text-secondary">
             Sign in to view your projects
           </CardDescription>
         </CardHeader>
@@ -77,7 +77,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
@@ -88,13 +88,13 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
             <Button
               type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700"
+              className="w-full bg-brand hover:bg-brand-hover text-white"
               disabled={signIn.isPending}
             >
               {signIn.isPending ? (
@@ -104,11 +104,11 @@ function LoginForm() {
               )}
             </Button>
           </form>
-          <p className="text-center text-sm text-zinc-500 mt-4">
+          <p className="text-center text-sm text-text-muted mt-4">
             Don&apos;t have an account?{' '}
             <Link 
               href={redirect ? `/portal/signup?redirect=${redirect}` : '/portal/signup'} 
-              className="text-emerald-500 hover:underline"
+              className="text-brand hover:underline"
             >
               Sign up
             </Link>
@@ -123,7 +123,7 @@ export default function PortalLoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
+        <Loader2 className="h-8 w-8 text-brand animate-spin" />
       </div>
     }>
       <LoginForm />

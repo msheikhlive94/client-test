@@ -15,7 +15,7 @@ interface KanbanCardProps {
 }
 
 const priorityConfig: Record<TaskPriority, { color: string; label: string }> = {
-  low: { color: 'bg-zinc-600 text-zinc-300', label: 'Low' },
+  low: { color: 'bg-zinc-600 text-text-primary', label: 'Low' },
   medium: { color: 'bg-blue-600 text-blue-100', label: 'Med' },
   high: { color: 'bg-orange-600 text-orange-100', label: 'High' },
   urgent: { color: 'bg-red-600 text-red-100', label: 'Urgent' }
@@ -52,12 +52,12 @@ export function KanbanCard({ task, onClick, isDragOverlay }: KanbanCardProps) {
       className={cn(
         // Base styles
         'group relative p-3.5 rounded-xl cursor-grab active:cursor-grabbing',
-        'border border-zinc-700/60 bg-zinc-800/90',
+        'border border-border-default/60 bg-surface-raised/90',
         'backdrop-blur-sm',
         // Transitions
         'transition-all duration-200 ease-out',
         // Hover effects
-        'hover:bg-zinc-750 hover:border-zinc-600/80',
+        'hover:bg-surface-hover hover:border-border-default/80',
         'hover:shadow-lg hover:shadow-black/20',
         'hover:-translate-y-0.5',
         // Dragging state
@@ -96,16 +96,16 @@ export function KanbanCard({ task, onClick, isDragOverlay }: KanbanCardProps) {
 
         {/* Title */}
         <h4 className={cn(
-          'text-sm font-medium text-zinc-100 leading-snug',
+          'text-sm font-medium text-text-primary leading-snug',
           'line-clamp-2',
-          task.status === 'done' && 'line-through text-zinc-500'
+          task.status === 'done' && 'line-through text-text-muted'
         )}>
           {task.title}
         </h4>
 
         {/* Description preview */}
         {task.description && (
-          <p className="text-xs text-zinc-500 line-clamp-1">
+          <p className="text-xs text-text-muted line-clamp-1">
             {task.description}
           </p>
         )}
@@ -118,7 +118,7 @@ export function KanbanCard({ task, onClick, isDragOverlay }: KanbanCardProps) {
                 'flex items-center gap-1 text-xs',
                 isOverdue && 'text-red-400',
                 isDueToday && 'text-amber-400',
-                !isOverdue && !isDueToday && 'text-zinc-500'
+                !isOverdue && !isDueToday && 'text-text-muted'
               )}>
                 <Calendar className="h-3 w-3" />
                 <span className="font-medium">
@@ -127,13 +127,13 @@ export function KanbanCard({ task, onClick, isDragOverlay }: KanbanCardProps) {
               </div>
             )}
             {task.estimated_hours && (
-              <div className="flex items-center gap-1 text-xs text-zinc-500">
+              <div className="flex items-center gap-1 text-xs text-text-muted">
                 <Clock className="h-3 w-3" />
                 <span>{task.estimated_hours}h</span>
               </div>
             )}
             {'users' in task && task.users && (
-              <div className="flex items-center gap-1 text-xs text-emerald-400">
+              <div className="flex items-center gap-1 text-xs text-brand">
                 <User className="h-3 w-3" />
                 <span className="font-medium truncate max-w-[100px]">
                   {task.users.name || task.users.email}
@@ -156,7 +156,7 @@ export function KanbanCardOverlay({ task }: { task: TaskWithAssignee | Task }) {
     <div
       className={cn(
         'p-3.5 rounded-xl',
-        'border border-emerald-500/50 bg-zinc-800',
+        'border border-emerald-500/50 bg-surface-raised',
         'shadow-2xl shadow-emerald-500/25',
         'ring-2 ring-emerald-500/30',
         'rotate-[3deg] scale-105'
@@ -183,15 +183,15 @@ export function KanbanCardOverlay({ task }: { task: TaskWithAssignee | Task }) {
         </div>
 
         <h4 className={cn(
-          'text-sm font-medium text-zinc-100 leading-snug',
+          'text-sm font-medium text-text-primary leading-snug',
           'line-clamp-2',
-          task.status === 'done' && 'line-through text-zinc-500'
+          task.status === 'done' && 'line-through text-text-muted'
         )}>
           {task.title}
         </h4>
 
         {task.description && (
-          <p className="text-xs text-zinc-500 line-clamp-1">
+          <p className="text-xs text-text-muted line-clamp-1">
             {task.description}
           </p>
         )}
@@ -203,7 +203,7 @@ export function KanbanCardOverlay({ task }: { task: TaskWithAssignee | Task }) {
                 'flex items-center gap-1 text-xs',
                 isOverdue && 'text-red-400',
                 isDueToday && 'text-amber-400',
-                !isOverdue && !isDueToday && 'text-zinc-500'
+                !isOverdue && !isDueToday && 'text-text-muted'
               )}>
                 <Calendar className="h-3 w-3" />
                 <span className="font-medium">
@@ -212,13 +212,13 @@ export function KanbanCardOverlay({ task }: { task: TaskWithAssignee | Task }) {
               </div>
             )}
             {task.estimated_hours && (
-              <div className="flex items-center gap-1 text-xs text-zinc-500">
+              <div className="flex items-center gap-1 text-xs text-text-muted">
                 <Clock className="h-3 w-3" />
                 <span>{task.estimated_hours}h</span>
               </div>
             )}
             {'users' in task && task.users && (
-              <div className="flex items-center gap-1 text-xs text-emerald-400">
+              <div className="flex items-center gap-1 text-xs text-brand">
                 <User className="h-3 w-3" />
                 <span className="font-medium truncate max-w-[100px]">
                   {task.users.name || task.users.email}

@@ -73,14 +73,14 @@ export default function ReportsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-white">Reports</h1>
-          <p className="text-sm md:text-base text-zinc-400">Track your business performance</p>
+          <h1 className="text-xl md:text-2xl font-bold text-text-primary">Reports</h1>
+          <p className="text-sm md:text-base text-text-secondary">Track your business performance</p>
         </div>
         <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRange)}>
-          <SelectTrigger className="w-full sm:w-40 bg-zinc-800 border-zinc-700 text-white">
+          <SelectTrigger className="w-full sm:w-40 bg-surface-raised border-border-default text-text-primary">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-zinc-800 border-zinc-700">
+          <SelectContent className="bg-surface-raised border-border-default">
             {Object.entries(dateRanges).map(([key, { label }]) => (
               <SelectItem key={key} value={key}>{label}</SelectItem>
             ))}
@@ -90,59 +90,59 @@ export default function ReportsPage() {
 
       {/* Overview Stats */}
       <div className="grid gap-3 md:gap-4 grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-4">
-            <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Total Hours</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Total Hours</CardTitle>
             <Clock className="h-4 w-4 text-blue-500 hidden sm:block" />
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
-            <div className="text-xl md:text-2xl font-bold text-white">
+            <div className="text-xl md:text-2xl font-bold text-text-primary">
               {stats?.totalHours.toFixed(1) || '0'}h
             </div>
-            <p className="text-xs text-zinc-500 hidden sm:block">
+            <p className="text-xs text-text-muted hidden sm:block">
               {stats?.entriesCount || 0} time entries
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-4">
-            <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Billable Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-emerald-500 hidden sm:block" />
+            <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Billable Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-brand hidden sm:block" />
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
-            <div className="text-xl md:text-2xl font-bold text-white">
+            <div className="text-xl md:text-2xl font-bold text-text-primary">
               €{stats?.billableAmount.toFixed(0) || '0'}
             </div>
-            <p className="text-xs text-zinc-500 hidden sm:block">
+            <p className="text-xs text-text-muted hidden sm:block">
               {stats?.billableHours.toFixed(1) || '0'}h billable
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-4">
-            <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Active Projects</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Active Projects</CardTitle>
             <FolderKanban className="h-4 w-4 text-orange-500 hidden sm:block" />
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
-            <div className="text-xl md:text-2xl font-bold text-white">{activeProjects}</div>
-            <p className="text-xs text-zinc-500 hidden sm:block">
+            <div className="text-xl md:text-2xl font-bold text-text-primary">{activeProjects}</div>
+            <p className="text-xs text-text-muted hidden sm:block">
               {completedProjects} completed, {totalProjects} total
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-4">
-            <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Billable Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-emerald-500 hidden sm:block" />
+            <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Billable Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-brand hidden sm:block" />
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
-            <div className="text-xl md:text-2xl font-bold text-white">
+            <div className="text-xl md:text-2xl font-bold text-text-primary">
               {stats?.totalHours ? ((stats.billableHours / stats.totalHours) * 100).toFixed(0) : 0}%
             </div>
-            <p className="text-xs text-zinc-500 hidden sm:block">
+            <p className="text-xs text-text-muted hidden sm:block">
               of time is billable
             </p>
           </CardContent>
@@ -152,14 +152,14 @@ export default function ReportsPage() {
       {/* Projects & Clients Summary */}
       <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
         {/* Projects by Status */}
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="p-3 md:p-4">
-            <CardTitle className="text-white text-base md:text-lg">Projects by Status</CardTitle>
+            <CardTitle className="text-text-primary text-base md:text-lg">Projects by Status</CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
             <div className="space-y-3 md:space-y-4">
               {[
-                { status: 'active', label: 'Active', color: 'bg-emerald-500' },
+                { status: 'active', label: 'Active', color: 'bg-brand' },
                 { status: 'on_hold', label: 'On Hold', color: 'bg-yellow-500' },
                 { status: 'completed', label: 'Completed', color: 'bg-blue-500' },
                 { status: 'draft', label: 'Draft', color: 'bg-zinc-500' },
@@ -170,10 +170,10 @@ export default function ReportsPage() {
                 return (
                   <div key={status} className="space-y-1 md:space-y-2">
                     <div className="flex items-center justify-between text-xs md:text-sm">
-                      <span className="text-zinc-300">{label}</span>
-                      <span className="text-zinc-400">{count} ({percentage.toFixed(0)}%)</span>
+                      <span className="text-text-primary">{label}</span>
+                      <span className="text-text-secondary">{count} ({percentage.toFixed(0)}%)</span>
                     </div>
-                    <div className="h-1.5 md:h-2 rounded-full bg-zinc-700">
+                    <div className="h-1.5 md:h-2 rounded-full bg-surface-hover">
                       <div 
                         className={`h-1.5 md:h-2 rounded-full ${color}`}
                         style={{ width: `${percentage}%` }}
@@ -187,13 +187,13 @@ export default function ReportsPage() {
         </Card>
 
         {/* Top Clients */}
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="p-3 md:p-4">
-            <CardTitle className="text-white text-base md:text-lg">Clients Overview</CardTitle>
+            <CardTitle className="text-text-primary text-base md:text-lg">Clients Overview</CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
             {!clients?.length ? (
-              <p className="text-zinc-400 text-center py-8 text-sm">No clients yet</p>
+              <p className="text-text-secondary text-center py-8 text-sm">No clients yet</p>
             ) : (
               <div className="space-y-2 md:space-y-3">
                 {clients.slice(0, 5).map((client) => {
@@ -202,16 +202,16 @@ export default function ReportsPage() {
                   return (
                     <div 
                       key={client.id}
-                      className="flex items-center justify-between p-2 md:p-3 rounded-lg bg-zinc-900"
+                      className="flex items-center justify-between p-2 md:p-3 rounded-lg bg-input-bg"
                     >
                       <div className="min-w-0">
-                        <p className="font-medium text-white text-sm md:text-base truncate">{client.name}</p>
-                        <p className="text-xs md:text-sm text-zinc-400">
+                        <p className="font-medium text-text-primary text-sm md:text-base truncate">{client.name}</p>
+                        <p className="text-xs md:text-sm text-text-secondary">
                           {clientProjects.length} project{clientProjects.length !== 1 ? 's' : ''}
                         </p>
                       </div>
                       {activeCount > 0 && (
-                        <span className="text-xs md:text-sm text-emerald-500 flex-shrink-0 ml-2">
+                        <span className="text-xs md:text-sm text-brand flex-shrink-0 ml-2">
                           {activeCount} active
                         </span>
                       )}
@@ -225,15 +225,15 @@ export default function ReportsPage() {
       </div>
 
       {/* Export Section */}
-      <Card className="bg-zinc-800 border-zinc-700">
+      <Card className="bg-surface-raised border-border-default">
         <CardHeader className="p-3 md:p-4">
-          <CardTitle className="text-white text-base md:text-lg">Export Data</CardTitle>
+          <CardTitle className="text-text-primary text-base md:text-lg">Export Data</CardTitle>
         </CardHeader>
         <CardContent className="p-3 md:p-4 pt-0">
           <div className="flex flex-col sm:flex-row gap-2 md:gap-4">
             <Button
               variant="outline"
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-700 text-sm w-full sm:w-auto"
+              className="border-border-default text-text-primary hover:bg-surface-hover text-sm w-full sm:w-auto"
               onClick={() => {
                 alert('CSV export coming soon!')
               }}
@@ -242,7 +242,7 @@ export default function ReportsPage() {
             </Button>
             <Button
               variant="outline"
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-700 text-sm w-full sm:w-auto"
+              className="border-border-default text-text-primary hover:bg-surface-hover text-sm w-full sm:w-auto"
               onClick={() => {
                 alert('Invoice generation coming soon!')
               }}

@@ -93,14 +93,14 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
           height={48}
           className="h-12 w-12"
         />
-        <h1 className="text-3xl font-bold text-white">{appConfig.name}</h1>
+        <h1 className="text-3xl font-bold text-text-primary">{appConfig.name}</h1>
       </div>
 
       <div className="space-y-3">
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="text-xl font-semibold text-text-primary">
           Welcome to {appConfig.name}
         </h2>
-        <p className="text-zinc-400 max-w-md mx-auto leading-relaxed">
+        <p className="text-text-secondary max-w-md mx-auto leading-relaxed">
           Let&apos;s get your workspace set up in under 2 minutes. You&apos;ll
           create your admin account, configure your workspace, and optionally
           set up your first project.
@@ -118,8 +118,8 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
               key={label}
               className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-800/50"
             >
-              <Icon className="h-5 w-5 text-emerald-500" />
-              <span className="text-xs text-zinc-400">{label}</span>
+              <Icon className="h-5 w-5 text-brand" />
+              <span className="text-xs text-text-secondary">{label}</span>
             </div>
           ))}
         </div>
@@ -127,7 +127,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
 
       <Button
         onClick={onNext}
-        className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-11 text-base"
+        className="bg-brand hover:bg-brand-hover text-white text-text-primary px-8 h-11 text-base"
       >
         Get Started
         <ArrowRight className="ml-2 h-4 w-4" />
@@ -157,12 +157,12 @@ function StepAdminAccount({
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 mb-2">
-          <KeyRound className="h-6 w-6 text-emerald-500" />
+          <KeyRound className="h-6 w-6 text-brand" />
         </div>
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="text-xl font-semibold text-text-primary">
           Create Admin Account
         </h2>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-text-secondary text-sm">
           This will be the primary administrator of your workspace.
         </p>
       </div>
@@ -176,26 +176,26 @@ function StepAdminAccount({
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label className="text-zinc-300">Email Address</Label>
+          <Label className="text-text-primary">Email Address</Label>
           <Input
             type="email"
             value={data.email}
             onChange={(e) => onChange({ email: e.target.value })}
             placeholder="admin@yourcompany.com"
-            className="bg-zinc-800 border-zinc-700 h-10"
+            className="bg-zinc-800 border-border-default h-10"
             autoComplete="email"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label className="text-zinc-300">Password</Label>
+          <Label className="text-text-primary">Password</Label>
           <Input
             type="password"
             value={data.password}
             onChange={(e) => onChange({ password: e.target.value })}
             placeholder="Min. 6 characters"
-            className="bg-zinc-800 border-zinc-700 h-10"
+            className="bg-zinc-800 border-border-default h-10"
             autoComplete="new-password"
             required
           />
@@ -207,13 +207,13 @@ function StepAdminAccount({
         </div>
 
         <div className="space-y-2">
-          <Label className="text-zinc-300">Confirm Password</Label>
+          <Label className="text-text-primary">Confirm Password</Label>
           <Input
             type="password"
             value={data.confirmPassword}
             onChange={(e) => onChange({ confirmPassword: e.target.value })}
             placeholder="Re-enter your password"
-            className="bg-zinc-800 border-zinc-700 h-10"
+            className="bg-zinc-800 border-border-default h-10"
             autoComplete="new-password"
             required
           />
@@ -241,37 +241,37 @@ function StepWorkspace({
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 mb-2">
-          <Building2 className="h-6 w-6 text-emerald-500" />
+          <Building2 className="h-6 w-6 text-brand" />
         </div>
-        <h2 className="text-xl font-semibold text-white">Workspace Settings</h2>
-        <p className="text-zinc-400 text-sm">
+        <h2 className="text-xl font-semibold text-text-primary">Workspace Settings</h2>
+        <p className="text-text-secondary text-sm">
           Tell us about your company or organization.
         </p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label className="text-zinc-300">Company / Organization Name</Label>
+          <Label className="text-text-primary">Company / Organization Name</Label>
           <Input
             value={data.companyName}
             onChange={(e) => onChange({ companyName: e.target.value })}
             placeholder="Acme Agency"
-            className="bg-zinc-800 border-zinc-700 h-10"
+            className="bg-zinc-800 border-border-default h-10"
           />
         </div>
 
         <div className="space-y-2">
-          <Label className="text-zinc-300">
+          <Label className="text-text-primary">
             Logo URL{' '}
-            <span className="text-zinc-500 font-normal">(optional)</span>
+            <span className="text-text-muted font-normal">(optional)</span>
           </Label>
           <Input
             value={data.logoUrl}
             onChange={(e) => onChange({ logoUrl: e.target.value })}
             placeholder="https://yoursite.com/logo.png"
-            className="bg-zinc-800 border-zinc-700 h-10"
+            className="bg-zinc-800 border-border-default h-10"
           />
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-text-muted">
             Paste a URL to your company logo. You can update this later in
             Settings.
           </p>
@@ -296,44 +296,44 @@ function StepFirstProject({
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 mb-2">
-          <FolderPlus className="h-6 w-6 text-emerald-500" />
+          <FolderPlus className="h-6 w-6 text-brand" />
         </div>
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="text-xl font-semibold text-text-primary">
           Create Your First Project
         </h2>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-text-secondary text-sm">
           Optionally create a project to get started right away.
         </p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label className="text-zinc-300">Project Name</Label>
+          <Label className="text-text-primary">Project Name</Label>
           <Input
             value={data.projectName}
             onChange={(e) => onChange({ projectName: e.target.value })}
             placeholder="Website Redesign"
-            className="bg-zinc-800 border-zinc-700 h-10"
+            className="bg-zinc-800 border-border-default h-10"
           />
         </div>
 
         <div className="space-y-2">
-          <Label className="text-zinc-300">
+          <Label className="text-text-primary">
             Description{' '}
-            <span className="text-zinc-500 font-normal">(optional)</span>
+            <span className="text-text-muted font-normal">(optional)</span>
           </Label>
           <textarea
             value={data.projectDescription}
             onChange={(e) => onChange({ projectDescription: e.target.value })}
             placeholder="Brief description of the project..."
             rows={3}
-            className="w-full rounded-md bg-zinc-800 border border-zinc-700 px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 resize-none"
+            className="w-full rounded-md bg-zinc-800 border border-border-default px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 resize-none"
           />
         </div>
       </div>
 
       <div className="pt-1 text-center">
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-text-muted">
           You can skip this step and create projects later from the dashboard.
         </p>
       </div>
@@ -349,14 +349,14 @@ function StepComplete() {
   return (
     <div className="text-center space-y-6">
       <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-emerald-500/10 mb-2">
-        <Rocket className="h-8 w-8 text-emerald-500" />
+        <Rocket className="h-8 w-8 text-brand" />
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-white">
+        <h2 className="text-2xl font-bold text-text-primary">
           Your Workspace is Ready!
         </h2>
-        <p className="text-zinc-400 max-w-sm mx-auto">
+        <p className="text-text-secondary max-w-sm mx-auto">
           Everything&apos;s set up. Here are some quick tips to get you started:
         </p>
       </div>
@@ -381,14 +381,14 @@ function StepComplete() {
         ].map(({ icon: Icon, title, desc }) => (
           <div
             key={title}
-            className="flex items-start gap-3 p-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50"
+            className="flex items-start gap-3 p-3 rounded-lg bg-zinc-800/50 border border-border-default/50"
           >
             <div className="flex-shrink-0 mt-0.5">
-              <Icon className="h-4 w-4 text-emerald-500" />
+              <Icon className="h-4 w-4 text-brand" />
             </div>
             <div>
-              <p className="text-sm font-medium text-white">{title}</p>
-              <p className="text-xs text-zinc-400">{desc}</p>
+              <p className="text-sm font-medium text-text-primary">{title}</p>
+              <p className="text-xs text-text-secondary">{desc}</p>
             </div>
           </div>
         ))}
@@ -531,7 +531,7 @@ export default function SetupPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-brand" />
       </div>
     )
   }
@@ -544,7 +544,7 @@ export default function SetupPage() {
       </div>
 
       {/* Card */}
-      <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
+      <Card className="bg-surface-raised border-border-default overflow-hidden">
         <CardContent className="p-6 sm:p-8">
           {/* Step content with transition */}
           <div
@@ -573,11 +573,11 @@ export default function SetupPage() {
 
           {/* Navigation buttons (hidden for step 1 and 5) */}
           {step > 1 && step < TOTAL_STEPS && (
-            <div className="flex items-center justify-between mt-8 pt-4 border-t border-zinc-800">
+            <div className="flex items-center justify-between mt-8 pt-4 border-t border-border-default">
               <Button
                 variant="ghost"
                 onClick={goBack}
-                className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                className="text-text-secondary hover:text-text-primary hover:bg-zinc-800"
                 disabled={isSubmitting}
               >
                 <ArrowLeft className="mr-1 h-4 w-4" />
@@ -592,7 +592,7 @@ export default function SetupPage() {
                       updateData({ projectName: '', projectDescription: '' })
                       handleSubmit()
                     }}
-                    className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                    className="text-text-secondary hover:text-text-primary hover:bg-zinc-800"
                     disabled={isSubmitting}
                   >
                     <SkipForward className="mr-1 h-4 w-4" />
@@ -603,7 +603,7 @@ export default function SetupPage() {
                 <Button
                   onClick={handleNext}
                   disabled={!canProceed(step) || isSubmitting}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                  className="bg-brand hover:bg-brand-hover text-white text-text-primary"
                 >
                   {isSubmitting ? (
                     <>
@@ -628,10 +628,10 @@ export default function SetupPage() {
 
           {/* Done step — go to dashboard */}
           {step === TOTAL_STEPS && (
-            <div className="mt-8 pt-4 border-t border-zinc-800 flex justify-center">
+            <div className="mt-8 pt-4 border-t border-border-default flex justify-center">
               <Button
                 onClick={() => router.replace('/login')}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 h-11 text-base"
+                className="bg-brand hover:bg-brand-hover text-white text-text-primary px-8 h-11 text-base"
               >
                 Go to Dashboard
                 <ArrowRight className="ml-2 h-4 w-4" />

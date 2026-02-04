@@ -80,7 +80,6 @@ export function TaskComments({
           })
         } catch (notifyError) {
           console.error('Failed to send mention notifications:', notifyError)
-          // Don't show error to user - the comment was saved successfully
         }
       }
     } catch {
@@ -131,7 +130,7 @@ export function TaskComments({
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center gap-2 text-zinc-400">
+      <div className="flex items-center gap-2 text-text-secondary">
         <MessageSquare className="h-4 w-4" />
         <span className="text-sm font-medium">
           Comments {comments?.length ? `(${comments.length})` : ''}
@@ -142,10 +141,10 @@ export function TaskComments({
       <div style={{ maxHeight }} className="pr-4 overflow-y-auto">
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-5 w-5 text-zinc-500 animate-spin" />
+            <Loader2 className="h-5 w-5 text-text-muted animate-spin" />
           </div>
         ) : !comments?.length ? (
-          <div className="text-center py-8 text-zinc-500 text-sm">
+          <div className="text-center py-8 text-text-muted text-sm">
             No comments yet. Start the conversation!
           </div>
         ) : (
@@ -160,7 +159,7 @@ export function TaskComments({
                   key={comment.id}
                   className={cn(
                     'group flex gap-3 p-3 rounded-lg',
-                    isAdmin ? 'bg-emerald-950/30' : 'bg-zinc-800/50'
+                    isAdmin ? 'bg-brand-muted' : 'bg-surface'
                   )}
                 >
                   {/* Avatar */}
@@ -181,7 +180,7 @@ export function TaskComments({
                   <div className="flex-1 min-w-0">
                     {/* Header */}
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="text-sm font-medium text-zinc-200 truncate max-w-[150px] sm:max-w-none">
+                      <span className="text-sm font-medium text-text-primary truncate max-w-[150px] sm:max-w-none">
                         {comment.author_name || 'Unknown'}
                       </span>
                       <span
@@ -194,7 +193,7 @@ export function TaskComments({
                       >
                         {isAdmin ? 'Team' : 'Client'}
                       </span>
-                      <span className="text-xs text-zinc-500 shrink-0">
+                      <span className="text-xs text-text-muted shrink-0">
                         {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                       </span>
                     </div>
@@ -205,7 +204,7 @@ export function TaskComments({
                         <Textarea
                           value={editContent}
                           onChange={(e) => setEditContent(e.target.value)}
-                          className="bg-zinc-900 border-zinc-700 text-sm min-h-[60px]"
+                          className="bg-input-bg border-border-default text-sm min-h-[60px]"
                           autoFocus
                         />
                         <div className="flex gap-2">
@@ -213,7 +212,7 @@ export function TaskComments({
                             size="sm"
                             onClick={handleSaveEdit}
                             disabled={updateComment.isPending}
-                            className="h-7 bg-emerald-600 hover:bg-emerald-700"
+                            className="h-7 bg-brand hover:bg-brand-hover text-white"
                           >
                             {updateComment.isPending ? (
                               <Loader2 className="h-3 w-3 animate-spin" />
@@ -226,7 +225,7 @@ export function TaskComments({
                             size="sm"
                             variant="ghost"
                             onClick={() => setEditingId(null)}
-                            className="h-7 text-zinc-400"
+                            className="h-7 text-text-secondary"
                           >
                             <X className="h-3 w-3" />
                             <span className="ml-1">Cancel</span>
@@ -234,7 +233,7 @@ export function TaskComments({
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm text-zinc-300 whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
+                      <p className="text-sm text-text-secondary whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                         {renderCommentWithMentions(comment.content)}
                       </p>
                     )}
@@ -247,7 +246,7 @@ export function TaskComments({
                         size="sm"
                         variant="ghost"
                         onClick={() => handleEdit(comment)}
-                        className="h-7 w-7 p-0 text-zinc-500 hover:text-zinc-300"
+                        className="h-7 w-7 p-0 text-text-muted hover:text-text-primary"
                       >
                         <Pencil className="h-3 w-3" />
                       </Button>
@@ -256,7 +255,7 @@ export function TaskComments({
                         variant="ghost"
                         onClick={() => handleDelete(comment.id)}
                         disabled={deleteComment.isPending}
-                        className="h-7 w-7 p-0 text-zinc-500 hover:text-red-400"
+                        className="h-7 w-7 p-0 text-text-muted hover:text-red-400"
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -277,7 +276,7 @@ export function TaskComments({
           onMentionsChange={setPendingMentions}
           users={mentionUsers || []}
           placeholder="Write a comment... (use @ to mention)"
-          className="bg-zinc-900 border-zinc-700 text-sm min-h-[60px] resize-none"
+          className="bg-input-bg border-border-default text-sm min-h-[60px] resize-none"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
               e.preventDefault()
@@ -288,7 +287,7 @@ export function TaskComments({
         <Button
           onClick={handleSubmit}
           disabled={!newComment.trim() || createComment.isPending}
-          className="h-auto bg-emerald-600 hover:bg-emerald-700 px-3"
+          className="h-auto bg-brand hover:bg-brand-hover text-white px-3"
         >
           {createComment.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -298,7 +297,7 @@ export function TaskComments({
         </Button>
       </div>
 
-      <p className="text-[10px] text-zinc-600">
+      <p className="text-[10px] text-text-muted">
         Press Cmd+Enter to send • Type @ to mention someone
       </p>
     </div>

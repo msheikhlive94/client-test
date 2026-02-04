@@ -39,7 +39,7 @@ import { ProjectStatus } from '@/types/database'
 
 const statusColors: Record<ProjectStatus, string> = {
   draft: 'bg-zinc-500',
-  active: 'bg-emerald-500',
+  active: 'bg-brand',
   on_hold: 'bg-yellow-500',
   completed: 'bg-blue-500',
   cancelled: 'bg-red-500'
@@ -78,7 +78,7 @@ export default function ProjectDetailPage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <div className="text-zinc-400">Loading project...</div>
+        <div className="text-text-secondary">Loading project...</div>
       </div>
     )
   }
@@ -86,7 +86,7 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <div className="p-6">
-        <div className="text-zinc-400">Project not found</div>
+        <div className="text-text-secondary">Project not found</div>
         <Link href="/projects">
           <Button variant="outline" className="mt-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -104,18 +104,18 @@ export default function ProjectDetailPage() {
         <div className="min-w-0">
           <Link 
             href="/projects" 
-            className="inline-flex items-center text-sm text-zinc-400 hover:text-white mb-2"
+            className="inline-flex items-center text-sm text-text-secondary hover:text-text-primary mb-2"
           >
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back to Projects
           </Link>
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <h1 className="text-xl sm:text-2xl font-bold text-white break-words">{project.name}</h1>
-            <Badge className={cn('text-white shrink-0', statusColors[project.status])}>
+            <h1 className="text-xl sm:text-2xl font-bold text-text-primary break-words">{project.name}</h1>
+            <Badge className={cn('text-text-primary shrink-0', statusColors[project.status])}>
               {statusLabels[project.status]}
             </Badge>
           </div>
-          <p className="text-zinc-400 mt-1 text-sm sm:text-base">
+          <p className="text-text-secondary mt-1 text-sm sm:text-base">
             {project.clients?.name || 'No client'} • {project.project_type.replace('_', ' ')}
           </p>
         </div>
@@ -123,7 +123,7 @@ export default function ProjectDetailPage() {
           <Button
             variant="outline"
             size="sm"
-            className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+            className="border-border-default text-text-primary hover:bg-surface-raised"
             onClick={() => setEditDialogOpen(true)}
           >
             <Pencil className="sm:mr-2 h-4 w-4" />
@@ -143,66 +143,66 @@ export default function ProjectDetailPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-400">Total Hours</CardTitle>
+            <CardTitle className="text-sm font-medium text-text-secondary">Total Hours</CardTitle>
             <Clock className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-text-primary">
               {stats?.totalHours.toFixed(1) || '0'}h
             </div>
             {project.estimated_hours && (
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-text-muted">
                 of {project.estimated_hours}h estimated
               </p>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-400">Billable Amount</CardTitle>
-            <DollarSign className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-sm font-medium text-text-secondary">Billable Amount</CardTitle>
+            <DollarSign className="h-4 w-4 text-brand" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-text-primary">
               €{stats?.billableAmount.toFixed(0) || '0'}
             </div>
             {project.budget_type === 'fixed' && project.budget_amount && (
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-text-muted">
                 of €{project.budget_amount} budget
               </p>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-400">Open Tasks</CardTitle>
+            <CardTitle className="text-sm font-medium text-text-secondary">Open Tasks</CardTitle>
             <ListTodo className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-text-primary">
               {stats?.openTasks || 0}
             </div>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-text-muted">
               {stats?.completedTasks || 0} completed
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-400">Timeline</CardTitle>
-            <AlertCircle className="h-4 w-4 text-zinc-500" />
+            <CardTitle className="text-sm font-medium text-text-secondary">Timeline</CardTitle>
+            <AlertCircle className="h-4 w-4 text-text-muted" />
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-medium text-white">
+            <div className="text-lg font-medium text-text-primary">
               {project.start_date ? format(new Date(project.start_date), 'MMM d') : 'Not set'}
               {project.end_date && ` - ${format(new Date(project.end_date), 'MMM d')}`}
             </div>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-text-muted">
               {project.start_date && project.end_date ? 
                 `${Math.ceil((new Date(project.end_date).getTime() - new Date(project.start_date).getTime()) / (1000 * 60 * 60 * 24))} days` : 
                 'No end date'}
@@ -213,23 +213,23 @@ export default function ProjectDetailPage() {
 
       {/* Description */}
       {project.description && (
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardContent className="p-4">
-            <p className="text-zinc-300">{project.description}</p>
+            <p className="text-text-primary">{project.description}</p>
           </CardContent>
         </Card>
       )}
 
       {/* Tabs */}
       <Tabs defaultValue="tasks" className="space-y-4">
-        <TabsList className="bg-zinc-800 border-zinc-700">
-          <TabsTrigger value="tasks" className="data-[state=active]:bg-zinc-700">
+        <TabsList className="bg-surface-raised border-border-default">
+          <TabsTrigger value="tasks" className="data-[state=active]:bg-surface-hover">
             Tasks
           </TabsTrigger>
-          <TabsTrigger value="time" className="data-[state=active]:bg-zinc-700">
+          <TabsTrigger value="time" className="data-[state=active]:bg-surface-hover">
             Time Entries
           </TabsTrigger>
-          <TabsTrigger value="notes" className="data-[state=active]:bg-zinc-700">
+          <TabsTrigger value="notes" className="data-[state=active]:bg-surface-hover">
             Notes
           </TabsTrigger>
         </TabsList>
@@ -256,16 +256,16 @@ export default function ProjectDetailPage() {
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent className="bg-zinc-900 border-zinc-800">
+        <AlertDialogContent className="bg-surface-raised border-border-default">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Delete Project?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
+            <AlertDialogTitle className="text-text-primary">Delete Project?</AlertDialogTitle>
+            <AlertDialogDescription className="text-text-secondary">
               This will permanently delete &quot;{project.name}&quot; and all associated tasks, 
               time entries, and notes. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
+            <AlertDialogCancel className="border-border-default text-text-primary hover:bg-surface-raised">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction

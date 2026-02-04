@@ -70,8 +70,8 @@ export default function AdminLayout({
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-zinc-900">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+      <div className="flex h-screen items-center justify-center bg-page-bg">
+        <Loader2 className="h-8 w-8 animate-spin text-brand" />
       </div>
     )
   }
@@ -85,7 +85,7 @@ export default function AdminLayout({
       <div className="flex flex-col h-screen lg:flex-row">
         <MobileHeader />
         <Sidebar />
-        <main className="flex-1 overflow-auto bg-zinc-50 dark:bg-zinc-900">
+        <main className="flex-1 overflow-auto bg-surface">
           {children}
         </main>
       </div>

@@ -36,7 +36,7 @@ interface LeadDetailDialogProps {
 const statusColors: Record<LeadStatus, string> = {
   new: 'bg-blue-500',
   contacted: 'bg-yellow-500',
-  qualified: 'bg-emerald-500',
+  qualified: 'bg-brand',
   converted: 'bg-purple-500',
   lost: 'bg-zinc-500'
 }
@@ -139,11 +139,11 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-surface-raised border-border-default text-text-primary max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-3">
             <DialogTitle className="text-xl">{lead.company_name}</DialogTitle>
-            <Badge className={cn('text-white border-0', statusColors[lead.status])}>
+            <Badge className={cn('text-text-primary border-0', statusColors[lead.status])}>
               {statusLabels[lead.status]}
             </Badge>
           </div>
@@ -154,27 +154,27 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
             {/* Contact Info */}
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-3">
-                <h3 className="font-medium text-zinc-300">Contact Information</h3>
+                <h3 className="font-medium text-text-primary">Contact Information</h3>
                 <div className="space-y-2 text-sm">
-                  <p className="text-white font-medium">{lead.contact_name}</p>
-                  <p className="flex items-center gap-2 text-zinc-400">
+                  <p className="text-text-primary font-medium">{lead.contact_name}</p>
+                  <p className="flex items-center gap-2 text-text-secondary">
                     <Mail className="h-4 w-4" />
-                    <a href={`mailto:${lead.email}`} className="hover:text-white">
+                    <a href={`mailto:${lead.email}`} className="hover:text-text-primary">
                       {lead.email}
                     </a>
                   </p>
                   {lead.phone && (
-                    <p className="flex items-center gap-2 text-zinc-400">
+                    <p className="flex items-center gap-2 text-text-secondary">
                       <Phone className="h-4 w-4" />
-                      <a href={`tel:${lead.phone}`} className="hover:text-white">
+                      <a href={`tel:${lead.phone}`} className="hover:text-text-primary">
                         {lead.phone}
                       </a>
                     </p>
                   )}
                   {lead.website && (
-                    <p className="flex items-center gap-2 text-zinc-400">
+                    <p className="flex items-center gap-2 text-text-secondary">
                       <Globe className="h-4 w-4" />
-                      <a href={lead.website.startsWith('http') ? lead.website : `https://${lead.website}`} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                      <a href={lead.website.startsWith('http') ? lead.website : `https://${lead.website}`} target="_blank" rel="noopener noreferrer" className="hover:text-text-primary">
                         {lead.website}
                       </a>
                     </p>
@@ -183,22 +183,22 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
               </div>
 
               <div className="space-y-3">
-                <h3 className="font-medium text-zinc-300">Project Details</h3>
+                <h3 className="font-medium text-text-primary">Project Details</h3>
                 <div className="space-y-2 text-sm">
-                  <p className="text-zinc-400">
-                    Type: <span className="text-white">{projectTypeLabels[lead.project_type]}</span>
+                  <p className="text-text-secondary">
+                    Type: <span className="text-text-primary">{projectTypeLabels[lead.project_type]}</span>
                   </p>
                   {lead.budget_range && (
-                    <p className="text-zinc-400">
-                      Budget: <span className="text-emerald-400">{budgetLabels[lead.budget_range]}</span>
+                    <p className="text-text-secondary">
+                      Budget: <span className="text-brand">{budgetLabels[lead.budget_range]}</span>
                     </p>
                   )}
                   {lead.timeline && (
-                    <p className="text-zinc-400">
-                      Timeline: <span className="text-white">{timelineLabels[lead.timeline]}</span>
+                    <p className="text-text-secondary">
+                      Timeline: <span className="text-text-primary">{timelineLabels[lead.timeline]}</span>
                     </p>
                   )}
-                  <p className="flex items-center gap-2 text-zinc-400">
+                  <p className="flex items-center gap-2 text-text-secondary">
                     <Calendar className="h-4 w-4" />
                     Submitted {format(new Date(lead.created_at), 'MMM d, yyyy')}
                   </p>
@@ -209,8 +209,8 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
             {/* Project Description */}
             {lead.project_description && (
               <div className="space-y-2">
-                <h3 className="font-medium text-zinc-300">Project Description</h3>
-                <div className="p-3 rounded-lg bg-zinc-800 text-zinc-300 text-sm whitespace-pre-wrap">
+                <h3 className="font-medium text-text-primary">Project Description</h3>
+                <div className="p-3 rounded-lg bg-surface-raised text-text-primary text-sm whitespace-pre-wrap">
                   {lead.project_description}
                 </div>
               </div>
@@ -219,8 +219,8 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
             {/* Source */}
             {(lead.source || lead.referral) && (
               <div className="space-y-2">
-                <h3 className="font-medium text-zinc-300">Source</h3>
-                <p className="text-sm text-zinc-400">
+                <h3 className="font-medium text-text-primary">Source</h3>
+                <p className="text-sm text-text-secondary">
                   {lead.source && <span>Source: {lead.source}</span>}
                   {lead.referral && <span>{lead.source ? ' • ' : ''}Referral: {lead.referral}</span>}
                 </p>
@@ -229,19 +229,19 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
 
             {/* Notes */}
             <div className="space-y-2">
-              <Label className="text-zinc-300">Internal Notes</Label>
+              <Label className="text-text-primary">Internal Notes</Label>
               <Textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Add notes about this lead..."
-                className="bg-zinc-800 border-zinc-700 min-h-[100px]"
+                className="bg-surface-raised border-border-default min-h-[100px]"
               />
               <Button
                 size="sm"
                 variant="outline"
                 onClick={handleSaveNotes}
                 disabled={updateLead.isPending}
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                className="border-border-default text-text-primary hover:bg-surface-raised"
               >
                 Save Notes
               </Button>
@@ -249,17 +249,17 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
 
             {/* Actions */}
             {lead.status !== 'converted' && lead.status !== 'lost' && (
-              <div className="flex justify-end gap-2 pt-4 border-t border-zinc-800">
+              <div className="flex justify-end gap-2 pt-4 border-t border-border-default">
                 <Button
                   variant="outline"
                   onClick={() => onOpenChange(false)}
-                  className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                  className="border-border-default text-text-primary hover:bg-surface-raised"
                 >
                   Close
                 </Button>
                 <Button
                   onClick={() => setShowConvert(true)}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-brand hover:bg-brand-hover text-white"
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   Convert to Client
@@ -268,15 +268,15 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
             )}
 
             {lead.status === 'converted' && (
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                <Sparkles className="h-5 w-5 text-emerald-500" />
-                <span className="text-emerald-400">This lead has been converted to a client</span>
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-brand/10 border border-emerald-500/20">
+                <Sparkles className="h-5 w-5 text-brand" />
+                <span className="text-brand">This lead has been converted to a client</span>
                 {lead.converted_project_id && (
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => router.push(`/projects/${lead.converted_project_id}`)}
-                    className="ml-auto border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                    className="ml-auto border-emerald-500/30 text-brand hover:bg-brand/10"
                   >
                     View Project
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -288,9 +288,9 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
         ) : (
           /* Convert Form */
           <div className="space-y-6">
-            <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              <h3 className="font-medium text-emerald-400 mb-2">Converting Lead to Client</h3>
-              <p className="text-sm text-zinc-400">
+            <div className="p-4 rounded-lg bg-brand/10 border border-emerald-500/20">
+              <h3 className="font-medium text-brand mb-2">Converting Lead to Client</h3>
+              <p className="text-sm text-text-secondary">
                 This will create a new client record and project for {lead.company_name}.
               </p>
             </div>
@@ -301,7 +301,7 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
                 <Input
                   value={lead.company_name}
                   disabled
-                  className="bg-zinc-800 border-zinc-700 opacity-70"
+                  className="bg-surface-raised border-border-default opacity-70"
                 />
               </div>
 
@@ -311,7 +311,7 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
                   placeholder={`${lead.company_name} - ${projectTypeLabels[lead.project_type]}`}
-                  className="bg-zinc-800 border-zinc-700"
+                  className="bg-surface-raised border-border-default"
                 />
               </div>
 
@@ -321,7 +321,7 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
                   <Input
                     value={projectTypeLabels[lead.project_type]}
                     disabled
-                    className="bg-zinc-800 border-zinc-700 opacity-70"
+                    className="bg-surface-raised border-border-default opacity-70"
                   />
                 </div>
                 <div className="space-y-2">
@@ -329,24 +329,24 @@ export function LeadDetailDialog({ lead, open, onOpenChange }: LeadDetailDialogP
                   <Input
                     value={lead.budget_range ? budgetLabels[lead.budget_range] : 'Not specified'}
                     disabled
-                    className="bg-zinc-800 border-zinc-700 opacity-70"
+                    className="bg-surface-raised border-border-default opacity-70"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-4 border-t border-zinc-800">
+            <div className="flex justify-end gap-2 pt-4 border-t border-border-default">
               <Button
                 variant="outline"
                 onClick={() => setShowConvert(false)}
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                className="border-border-default text-text-primary hover:bg-surface-raised"
               >
                 Back
               </Button>
               <Button
                 onClick={handleConvert}
                 disabled={convertLead.isPending}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-brand hover:bg-brand-hover text-white"
               >
                 {convertLead.isPending ? 'Converting...' : 'Create Client & Project'}
               </Button>

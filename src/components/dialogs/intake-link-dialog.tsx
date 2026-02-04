@@ -71,7 +71,7 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl">
+      <DialogContent className="bg-surface-raised border-border-default text-text-primary max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Link2 className="h-5 w-5" />
@@ -84,13 +84,13 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
           {!showCreate ? (
             <Button
               onClick={() => setShowCreate(true)}
-              className="w-full bg-zinc-800 hover:bg-zinc-700 border border-dashed border-zinc-600"
+              className="w-full bg-surface-raised hover:bg-surface-hover border border-dashed border-border-default"
             >
               <Plus className="mr-2 h-4 w-4" />
               Create New Link
             </Button>
           ) : (
-            <div className="p-4 rounded-lg bg-zinc-800 space-y-4">
+            <div className="p-4 rounded-lg bg-surface-raised space-y-4">
               <h3 className="font-medium">New Intake Link</h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
@@ -99,7 +99,7 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
                     value={newLabel}
                     onChange={(e) => setNewLabel(e.target.value)}
                     placeholder="e.g., LinkedIn Campaign"
-                    className="bg-zinc-900 border-zinc-700"
+                    className="bg-input-bg border-border-default"
                   />
                 </div>
                 <div className="space-y-2">
@@ -109,7 +109,7 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
                     value={newMaxUses}
                     onChange={(e) => setNewMaxUses(e.target.value)}
                     placeholder="Unlimited"
-                    className="bg-zinc-900 border-zinc-700"
+                    className="bg-input-bg border-border-default"
                   />
                 </div>
               </div>
@@ -117,14 +117,14 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
                 <Button
                   variant="outline"
                   onClick={() => setShowCreate(false)}
-                  className="border-zinc-700"
+                  className="border-border-default"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleCreate}
                   disabled={createLink.isPending}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-brand hover:bg-brand-hover text-white"
                 >
                   Create & Copy
                 </Button>
@@ -134,25 +134,25 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
 
           {/* Active Links */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-zinc-400">Active Links ({activeLinks.length})</h3>
+            <h3 className="text-sm font-medium text-text-secondary">Active Links ({activeLinks.length})</h3>
             {activeLinks.length === 0 ? (
-              <p className="text-sm text-zinc-500 py-4 text-center">No active links</p>
+              <p className="text-sm text-text-muted py-4 text-center">No active links</p>
             ) : (
               activeLinks.map((link) => (
                 <div
                   key={link.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-zinc-800"
+                  className="flex items-center justify-between p-3 rounded-lg bg-surface-raised"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <code className="text-sm text-emerald-400">/onboard/{link.token}</code>
+                      <code className="text-sm text-brand">/onboard/{link.token}</code>
                       {link.label && (
-                        <Badge variant="outline" className="border-zinc-600 text-zinc-400">
+                        <Badge variant="outline" className="border-border-default text-text-secondary">
                           {link.label}
                         </Badge>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
+                    <div className="flex items-center gap-3 mt-1 text-xs text-text-muted">
                       <span>Created {format(new Date(link.created_at), 'MMM d')}</span>
                       <span>•</span>
                       <span>{link.use_count} uses</span>
@@ -169,10 +169,10 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
                       variant="ghost"
                       size="sm"
                       onClick={() => copyLink(link.token)}
-                      className="text-zinc-400 hover:text-white"
+                      className="text-text-secondary hover:text-text-primary"
                     >
                       {copiedToken === link.token ? (
-                        <Check className="h-4 w-4 text-emerald-500" />
+                        <Check className="h-4 w-4 text-brand" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}
@@ -181,7 +181,7 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
                       variant="ghost"
                       size="sm"
                       onClick={() => window.open(`/onboard/${link.token}`, '_blank')}
-                      className="text-zinc-400 hover:text-white"
+                      className="text-text-secondary hover:text-text-primary"
                     >
                       <ExternalLink className="h-4 w-4" />
                     </Button>
@@ -189,7 +189,7 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDeactivate(link.id)}
-                      className="text-zinc-400 hover:text-red-500"
+                      className="text-text-secondary hover:text-red-500"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -202,15 +202,15 @@ export function IntakeLinkDialog({ open, onOpenChange }: IntakeLinkDialogProps) 
           {/* Inactive Links */}
           {inactiveLinks.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-sm font-medium text-zinc-400">Inactive Links ({inactiveLinks.length})</h3>
+              <h3 className="text-sm font-medium text-text-secondary">Inactive Links ({inactiveLinks.length})</h3>
               {inactiveLinks.map((link) => (
                 <div
                   key={link.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/50 opacity-60"
+                  className="flex items-center justify-between p-3 rounded-lg bg-surface-raised/50 opacity-60"
                 >
                   <div>
-                    <code className="text-sm text-zinc-500">/onboard/{link.token}</code>
-                    <p className="text-xs text-zinc-600 mt-1">
+                    <code className="text-sm text-text-muted">/onboard/{link.token}</code>
+                    <p className="text-xs text-text-muted mt-1">
                       {link.use_count} uses • Deactivated
                     </p>
                   </div>

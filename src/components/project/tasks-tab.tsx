@@ -119,14 +119,14 @@ export function TasksTab({ projectId }: TasksTabProps) {
   }
 
   return (
-    <Card className="bg-zinc-800 border-zinc-700">
+    <Card className="bg-surface-raised border-border-default">
       <CardContent className="p-3 sm:p-4">
         {/* Header */}
         <div className="flex flex-col gap-3 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-4">
               {/* View Toggle */}
-              <div className="flex items-center gap-1 p-1 bg-zinc-900 rounded-lg">
+              <div className="flex items-center gap-1 p-1 bg-input-bg rounded-lg">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -134,8 +134,8 @@ export function TasksTab({ projectId }: TasksTabProps) {
                   className={cn(
                     'h-8 w-8 p-0 rounded-md',
                     viewMode === 'list'
-                      ? 'bg-emerald-600 text-white hover:bg-emerald-600'
-                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                      ? 'bg-emerald-600 text-text-primary hover:bg-emerald-600'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-surface-raised'
                   )}
                 >
                   <List className="h-4 w-4" />
@@ -147,8 +147,8 @@ export function TasksTab({ projectId }: TasksTabProps) {
                   className={cn(
                     'h-8 w-8 p-0 rounded-md',
                     viewMode === 'kanban'
-                      ? 'bg-emerald-600 text-white hover:bg-emerald-600'
-                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                      ? 'bg-emerald-600 text-text-primary hover:bg-emerald-600'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-surface-raised'
                   )}
                 >
                   <LayoutGrid className="h-4 w-4" />
@@ -158,13 +158,13 @@ export function TasksTab({ projectId }: TasksTabProps) {
               {/* Assignee Filter (only show in list view) */}
               {viewMode === 'list' && (
                 <Select value={assigneeFilter} onValueChange={setAssigneeFilter}>
-                  <SelectTrigger className="w-[140px] sm:w-[180px] bg-zinc-800 border-zinc-700">
+                  <SelectTrigger className="w-[140px] sm:w-[180px] bg-surface-raised border-border-default">
                     <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-zinc-500 shrink-0" />
+                      <User className="h-4 w-4 text-text-muted shrink-0" />
                       <SelectValue placeholder="All Users" />
                     </div>
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-800 border-zinc-700">
+                  <SelectContent className="bg-surface-raised border-border-default">
                     <SelectItem value="all">All Users</SelectItem>
                     <SelectItem value="unassigned">Unassigned</SelectItem>
                     {users?.map((user) => (
@@ -180,7 +180,7 @@ export function TasksTab({ projectId }: TasksTabProps) {
             {viewMode === 'list' && (
               <Button
                 onClick={handleNewTask}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-brand hover:bg-brand-hover text-white"
                 size="sm"
               >
                 <Plus className="mr-1 sm:mr-2 h-4 w-4" />
@@ -203,8 +203,8 @@ export function TasksTab({ projectId }: TasksTabProps) {
                     className={cn(
                       'text-xs sm:text-sm whitespace-nowrap',
                       statusFilter === status
-                        ? 'bg-emerald-600 hover:bg-emerald-700'
-                        : 'border-zinc-700 text-zinc-400 hover:bg-zinc-700'
+                        ? 'bg-brand hover:bg-brand-hover text-white'
+                        : 'border-border-default text-text-secondary hover:bg-surface-hover'
                     )}
                   >
                     {status === 'all' ? 'All' : statusLabels[status]}
@@ -231,13 +231,13 @@ export function TasksTab({ projectId }: TasksTabProps) {
           <>
             {/* Tasks List */}
             {isLoading ? (
-              <div className="text-zinc-400 py-8 text-center">Loading tasks...</div>
+              <div className="text-text-secondary py-8 text-center">Loading tasks...</div>
             ) : filteredTasks?.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-zinc-400">No tasks yet</p>
+                <p className="text-text-secondary">No tasks yet</p>
                 <Button
                   onClick={handleNewTask}
-                  className="mt-4 bg-emerald-600 hover:bg-emerald-700"
+                  className="mt-4 bg-brand hover:bg-brand-hover text-white"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add First Task
@@ -248,16 +248,16 @@ export function TasksTab({ projectId }: TasksTabProps) {
                 {filteredTasks?.map((task) => (
                   <div
                     key={task.id}
-                    className="flex items-start sm:items-center gap-2 sm:gap-3 p-3 rounded-lg bg-zinc-900 hover:bg-zinc-850 group"
+                    className="flex items-start sm:items-center gap-2 sm:gap-3 p-3 rounded-lg bg-input-bg hover:bg-surface-hover group"
                   >
-                    <GripVertical className="hidden sm:block h-4 w-4 text-zinc-600 cursor-grab opacity-0 group-hover:opacity-100 mt-0.5 sm:mt-0 shrink-0" />
+                    <GripVertical className="hidden sm:block h-4 w-4 text-text-muted cursor-grab opacity-0 group-hover:opacity-100 mt-0.5 sm:mt-0 shrink-0" />
 
                     <Checkbox
                       checked={task.status === 'done'}
                       onCheckedChange={(checked) =>
                         handleStatusChange(task, checked ? 'done' : 'todo')
                       }
-                      className="border-zinc-600 mt-1 sm:mt-0 shrink-0"
+                      className="border-border-default mt-1 sm:mt-0 shrink-0"
                     />
 
                     <div
@@ -266,15 +266,15 @@ export function TasksTab({ projectId }: TasksTabProps) {
                     >
                       <div className="flex items-start sm:items-center gap-2 flex-wrap">
                         <span className={cn(
-                          'text-white text-sm sm:text-base break-words',
-                          task.status === 'done' && 'line-through text-zinc-500'
+                          'text-text-primary text-sm sm:text-base break-words',
+                          task.status === 'done' && 'line-through text-text-muted'
                         )}>
                           {task.title}
                         </span>
                         <Badge
                           variant="outline"
                           className={cn(
-                            'text-xs border-0 text-white shrink-0',
+                            'text-xs border-0 text-text-primary shrink-0',
                             priorityColors[task.priority]
                           )}
                         >
@@ -282,25 +282,25 @@ export function TasksTab({ projectId }: TasksTabProps) {
                         </Badge>
                       </div>
                       {task.description && (
-                        <p className="text-sm text-zinc-500 mt-1 line-clamp-1">
+                        <p className="text-sm text-text-muted mt-1 line-clamp-1">
                           {task.description}
                         </p>
                       )}
                       {/* Mobile metadata row */}
                       <div className="flex flex-wrap items-center gap-2 mt-1.5 sm:hidden">
                         {task.due_date && (
-                          <div className="flex items-center gap-1 text-xs text-zinc-400">
+                          <div className="flex items-center gap-1 text-xs text-text-secondary">
                             <Calendar className="h-3 w-3" />
                             {format(new Date(task.due_date), 'MMM d')}
                           </div>
                         )}
                         {task.estimated_hours && (
-                          <span className="text-xs text-zinc-500">
+                          <span className="text-xs text-text-muted">
                             {task.estimated_hours}h
                           </span>
                         )}
                         {'users' in task && task.users && (
-                          <div className="flex items-center gap-1 text-xs text-emerald-400">
+                          <div className="flex items-center gap-1 text-xs text-brand">
                             <User className="h-3 w-3" />
                             <span className="font-medium truncate max-w-[120px]">
                               {task.users.name || task.users.email}
@@ -309,7 +309,7 @@ export function TasksTab({ projectId }: TasksTabProps) {
                         )}
                         <Badge
                           variant="outline"
-                          className="text-[10px] border-zinc-600 text-zinc-400"
+                          className="text-[10px] border-border-default text-text-secondary"
                         >
                           {statusLabels[task.status]}
                         </Badge>
@@ -319,18 +319,18 @@ export function TasksTab({ projectId }: TasksTabProps) {
                     {/* Desktop metadata */}
                     <div className="hidden sm:flex items-center gap-3 shrink-0">
                       {task.due_date && (
-                        <div className="flex items-center gap-1 text-sm text-zinc-400">
+                        <div className="flex items-center gap-1 text-sm text-text-secondary">
                           <Calendar className="h-3 w-3" />
                           {format(new Date(task.due_date), 'MMM d')}
                         </div>
                       )}
                       {task.estimated_hours && (
-                        <span className="text-sm text-zinc-500">
+                        <span className="text-sm text-text-muted">
                           {task.estimated_hours}h
                         </span>
                       )}
                       {'users' in task && task.users && (
-                        <div className="flex items-center gap-1 text-sm text-emerald-400">
+                        <div className="flex items-center gap-1 text-sm text-brand">
                           <User className="h-3 w-3" />
                           <span className="font-medium">
                             {task.users.name || task.users.email}
@@ -339,7 +339,7 @@ export function TasksTab({ projectId }: TasksTabProps) {
                       )}
                       <Badge
                         variant="outline"
-                        className="text-xs border-zinc-600 text-zinc-400"
+                        className="text-xs border-border-default text-text-secondary"
                       >
                         {statusLabels[task.status]}
                       </Badge>
@@ -350,7 +350,7 @@ export function TasksTab({ projectId }: TasksTabProps) {
                           e.stopPropagation()
                           handleDelete(task)
                         }}
-                        className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-500 hover:bg-transparent"
+                        className="opacity-0 group-hover:opacity-100 text-text-secondary hover:text-red-500 hover:bg-transparent"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -364,7 +364,7 @@ export function TasksTab({ projectId }: TasksTabProps) {
                         e.stopPropagation()
                         handleDelete(task)
                       }}
-                      className="sm:hidden text-zinc-500 hover:text-red-500 hover:bg-transparent p-1 h-auto shrink-0"
+                      className="sm:hidden text-text-muted hover:text-red-500 hover:bg-transparent p-1 h-auto shrink-0"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

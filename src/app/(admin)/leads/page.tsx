@@ -34,7 +34,7 @@ import {
 const statusColors: Record<LeadStatus, string> = {
   new: 'bg-blue-500',
   contacted: 'bg-yellow-500',
-  qualified: 'bg-emerald-500',
+  qualified: 'bg-brand',
   converted: 'bg-purple-500',
   lost: 'bg-zinc-500'
 }
@@ -113,21 +113,21 @@ export default function LeadsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-white">Leads</h1>
-          <p className="text-sm md:text-base text-zinc-400">Manage incoming client inquiries</p>
+          <h1 className="text-xl md:text-2xl font-bold text-text-primary">Leads</h1>
+          <p className="text-sm md:text-base text-text-secondary">Manage incoming client inquiries</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
           <Button
             variant="outline"
             onClick={() => setLinkDialogOpen(true)}
-            className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 w-full sm:w-auto"
+            className="border-border-default text-text-primary hover:bg-surface-raised w-full sm:w-auto"
           >
             <Link2 className="mr-2 h-4 w-4" />
             Intake Links
           </Button>
           <Button
             onClick={handleCreateLink}
-            className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
+            className="bg-brand hover:bg-brand-hover text-white w-full sm:w-auto"
           >
             <Plus className="mr-2 h-4 w-4" />
             New Link
@@ -137,33 +137,33 @@ export default function LeadsPage() {
 
       {/* Stats */}
       <div className="grid gap-3 md:gap-4 grid-cols-3">
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="pb-2 p-3 md:p-4">
-            <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Active</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Active</CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
-            <div className="text-xl md:text-2xl font-bold text-white">{activeLeads}</div>
-            <p className="text-xs text-zinc-500 hidden sm:block">Waiting for action</p>
+            <div className="text-xl md:text-2xl font-bold text-text-primary">{activeLeads}</div>
+            <p className="text-xs text-text-muted hidden sm:block">Waiting for action</p>
           </CardContent>
         </Card>
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="pb-2 p-3 md:p-4">
-            <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Converted</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Converted</CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
-            <div className="text-xl md:text-2xl font-bold text-emerald-500">{convertedLeads}</div>
-            <p className="text-xs text-zinc-500 hidden sm:block">Became clients</p>
+            <div className="text-xl md:text-2xl font-bold text-brand">{convertedLeads}</div>
+            <p className="text-xs text-text-muted hidden sm:block">Became clients</p>
           </CardContent>
         </Card>
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardHeader className="pb-2 p-3 md:p-4">
-            <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Rate</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Rate</CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-4 pt-0">
-            <div className="text-xl md:text-2xl font-bold text-white">
+            <div className="text-xl md:text-2xl font-bold text-text-primary">
               {leads?.length ? ((convertedLeads / leads.length) * 100).toFixed(0) : 0}%
             </div>
-            <p className="text-xs text-zinc-500 hidden sm:block">Conversion</p>
+            <p className="text-xs text-text-muted hidden sm:block">Conversion</p>
           </CardContent>
         </Card>
       </div>
@@ -171,22 +171,22 @@ export default function LeadsPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
           <Input
             placeholder="Search leads..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-zinc-800 border-zinc-700 text-white"
+            className="pl-9 bg-surface-raised border-border-default text-text-primary"
           />
         </div>
         <Select
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as LeadStatus | 'all')}
         >
-          <SelectTrigger className="w-full sm:w-40 bg-zinc-800 border-zinc-700 text-white">
+          <SelectTrigger className="w-full sm:w-40 bg-surface-raised border-border-default text-text-primary">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
-          <SelectContent className="bg-zinc-800 border-zinc-700">
+          <SelectContent className="bg-surface-raised border-border-default">
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="new">New</SelectItem>
             <SelectItem value="contacted">Contacted</SelectItem>
@@ -199,18 +199,18 @@ export default function LeadsPage() {
 
       {/* Leads List */}
       {isLoading ? (
-        <div className="text-zinc-400">Loading leads...</div>
+        <div className="text-text-secondary">Loading leads...</div>
       ) : filteredLeads?.length === 0 ? (
-        <Card className="bg-zinc-800 border-zinc-700">
+        <Card className="bg-surface-raised border-border-default">
           <CardContent className="flex flex-col items-center justify-center py-12 px-4">
-            <UserPlus className="h-12 w-12 md:h-16 md:w-16 text-zinc-600" />
-            <h3 className="mt-4 text-lg font-medium text-white text-center">No leads found</h3>
-            <p className="mt-2 text-zinc-400 text-center text-sm max-w-md">
+            <UserPlus className="h-12 w-12 md:h-16 md:w-16 text-text-muted" />
+            <h3 className="mt-4 text-lg font-medium text-text-primary text-center">No leads found</h3>
+            <p className="mt-2 text-text-secondary text-center text-sm max-w-md">
               Create an intake link and share it with potential clients.
             </p>
             <Button
               onClick={handleCreateLink}
-              className="mt-4 bg-emerald-600 hover:bg-emerald-700"
+              className="mt-4 bg-brand hover:bg-brand-hover text-white"
             >
               <Plus className="mr-2 h-4 w-4" />
               Create Intake Link
@@ -222,24 +222,24 @@ export default function LeadsPage() {
           {filteredLeads?.map((lead) => (
             <Card
               key={lead.id}
-              className="bg-zinc-800 border-zinc-700 hover:border-zinc-600 transition-colors cursor-pointer group"
+              className="bg-surface-raised border-border-default hover:border-border-default transition-colors cursor-pointer group"
               onClick={() => setSelectedLead(lead)}
             >
               <CardContent className="p-3 md:p-4">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <h3 className="font-semibold text-white text-sm md:text-base">{lead.company_name}</h3>
-                      <Badge className={cn('text-white border-0 text-xs', statusColors[lead.status])}>
+                      <h3 className="font-semibold text-text-primary text-sm md:text-base">{lead.company_name}</h3>
+                      <Badge className={cn('text-text-primary border-0 text-xs', statusColors[lead.status])}>
                         {statusLabels[lead.status]}
                       </Badge>
                       {lead.budget_range && (
-                        <Badge variant="outline" className="border-zinc-600 text-zinc-400 text-xs hidden sm:inline-flex">
+                        <Badge variant="outline" className="border-border-default text-text-secondary text-xs hidden sm:inline-flex">
                           {budgetLabels[lead.budget_range]}
                         </Badge>
                       )}
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs md:text-sm text-zinc-400">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs md:text-sm text-text-secondary">
                       <span>{lead.contact_name}</span>
                       <span className="flex items-center gap-1">
                         <Mail className="h-3 w-3" />
@@ -253,13 +253,13 @@ export default function LeadsPage() {
                       )}
                     </div>
                     {lead.project_description && (
-                      <p className="mt-2 text-xs md:text-sm text-zinc-500 line-clamp-2">
+                      <p className="mt-2 text-xs md:text-sm text-text-muted line-clamp-2">
                         {lead.project_description}
                       </p>
                     )}
                   </div>
                   <div className="flex items-center gap-2 sm:flex-col sm:items-end">
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-text-muted">
                       {format(new Date(lead.created_at), 'MMM d')}
                     </span>
                     <div className="flex items-center gap-1">
@@ -270,12 +270,12 @@ export default function LeadsPage() {
                         }}
                       >
                         <SelectTrigger 
-                          className="w-28 sm:w-32 h-7 sm:h-8 bg-zinc-900 border-zinc-700 text-xs"
+                          className="w-28 sm:w-32 h-7 sm:h-8 bg-input-bg border-border-default text-xs"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="bg-zinc-800 border-zinc-700">
+                        <SelectContent className="bg-surface-raised border-border-default">
                           <SelectItem value="new">New</SelectItem>
                           <SelectItem value="contacted">Contacted</SelectItem>
                           <SelectItem value="qualified">Qualified</SelectItem>
@@ -290,7 +290,7 @@ export default function LeadsPage() {
                           e.stopPropagation()
                           setDeleteLead(lead)
                         }}
-                        className="sm:opacity-0 sm:group-hover:opacity-100 text-zinc-400 hover:text-red-500 hover:bg-transparent h-7 w-7 p-0"
+                        className="sm:opacity-0 sm:group-hover:opacity-100 text-text-secondary hover:text-red-500 hover:bg-transparent h-7 w-7 p-0"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -318,15 +318,15 @@ export default function LeadsPage() {
 
       {/* Delete Confirmation */}
       <AlertDialog open={!!deleteLead} onOpenChange={(open) => !open && setDeleteLead(null)}>
-        <AlertDialogContent className="bg-zinc-900 border-zinc-800 mx-4 sm:mx-auto">
+        <AlertDialogContent className="bg-surface-raised border-border-default mx-4 sm:mx-auto">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Delete Lead?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
+            <AlertDialogTitle className="text-text-primary">Delete Lead?</AlertDialogTitle>
+            <AlertDialogDescription className="text-text-secondary">
               This will permanently delete the lead from {deleteLead?.company_name}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-            <AlertDialogCancel className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 w-full sm:w-auto">
+            <AlertDialogCancel className="border-border-default text-text-primary hover:bg-surface-raised w-full sm:w-auto">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction

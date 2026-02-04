@@ -62,25 +62,25 @@ export function TimeTab({ projectId, hourlyRate }: TimeTabProps) {
   }, {} as Record<string, typeof entries>)
 
   return (
-    <Card className="bg-zinc-800 border-zinc-700">
+    <Card className="bg-surface-raised border-border-default">
       <CardContent className="p-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-6">
             <div>
-              <p className="text-sm text-zinc-400">Total Time</p>
-              <p className="text-xl font-bold text-white">{formatDuration(totalMinutes)}</p>
+              <p className="text-sm text-text-secondary">Total Time</p>
+              <p className="text-xl font-bold text-text-primary">{formatDuration(totalMinutes)}</p>
             </div>
             <div>
-              <p className="text-sm text-zinc-400">Billable</p>
-              <p className="text-xl font-bold text-emerald-500">
+              <p className="text-sm text-text-secondary">Billable</p>
+              <p className="text-xl font-bold text-brand">
                 €{((billableMinutes / 60) * hourlyRate).toFixed(0)}
               </p>
             </div>
           </div>
           <Button
             onClick={handleNewEntry}
-            className="bg-emerald-600 hover:bg-emerald-700"
+            className="bg-brand hover:bg-brand-hover text-white"
           >
             <Plus className="mr-2 h-4 w-4" />
             Log Time
@@ -89,14 +89,14 @@ export function TimeTab({ projectId, hourlyRate }: TimeTabProps) {
 
         {/* Time Entries */}
         {isLoading ? (
-          <div className="text-zinc-400 py-8 text-center">Loading time entries...</div>
+          <div className="text-text-secondary py-8 text-center">Loading time entries...</div>
         ) : !entries?.length ? (
           <div className="text-center py-12">
-            <Clock className="mx-auto h-12 w-12 text-zinc-600" />
-            <p className="mt-2 text-zinc-400">No time logged yet</p>
+            <Clock className="mx-auto h-12 w-12 text-text-muted" />
+            <p className="mt-2 text-text-secondary">No time logged yet</p>
             <Button
               onClick={handleNewEntry}
-              className="mt-4 bg-emerald-600 hover:bg-emerald-700"
+              className="mt-4 bg-brand hover:bg-brand-hover text-white"
             >
               <Plus className="mr-2 h-4 w-4" />
               Log First Entry
@@ -109,10 +109,10 @@ export function TimeTab({ projectId, hourlyRate }: TimeTabProps) {
               .map(([date, dateEntries]) => (
                 <div key={date}>
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-medium text-zinc-400">
+                    <h3 className="text-sm font-medium text-text-secondary">
                       {format(new Date(date), 'EEEE, MMMM d')}
                     </h3>
-                    <span className="text-sm text-zinc-500">
+                    <span className="text-sm text-text-muted">
                       {formatDuration(dateEntries?.reduce((s, e) => s + e.duration_minutes, 0) || 0)}
                     </span>
                   </div>
@@ -121,15 +121,15 @@ export function TimeTab({ projectId, hourlyRate }: TimeTabProps) {
                       <div
                         key={entry.id}
                         onClick={() => handleEdit(entry)}
-                        className="flex items-center justify-between p-3 rounded-lg bg-zinc-900 hover:bg-zinc-850 cursor-pointer group"
+                        className="flex items-center justify-between p-3 rounded-lg bg-input-bg hover:bg-surface-hover cursor-pointer group"
                       >
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-white">
+                            <span className="text-text-primary">
                               {entry.description || 'No description'}
                             </span>
                             {entry.tasks && (
-                              <span className="text-sm text-zinc-500">
+                              <span className="text-sm text-text-muted">
                                 • {entry.tasks.title}
                               </span>
                             )}
@@ -138,11 +138,11 @@ export function TimeTab({ projectId, hourlyRate }: TimeTabProps) {
                         <div className="flex items-center gap-4">
                           <span className={cn(
                             'text-sm',
-                            entry.billable ? 'text-emerald-500' : 'text-zinc-500'
+                            entry.billable ? 'text-brand' : 'text-text-muted'
                           )}>
                             {entry.billable ? 'Billable' : 'Non-billable'}
                           </span>
-                          <span className="font-mono text-white">
+                          <span className="font-mono text-text-primary">
                             {formatDuration(entry.duration_minutes)}
                           </span>
                           <Button
@@ -152,7 +152,7 @@ export function TimeTab({ projectId, hourlyRate }: TimeTabProps) {
                               e.stopPropagation()
                               handleDelete(entry.id)
                             }}
-                            className="opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-500 hover:bg-transparent"
+                            className="opacity-0 group-hover:opacity-100 text-text-secondary hover:text-red-500 hover:bg-transparent"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

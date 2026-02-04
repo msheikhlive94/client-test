@@ -99,10 +99,10 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-surface-raised border-border-default text-text-primary max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{project ? 'Edit Project' : 'New Project'}</DialogTitle>
-          <DialogDescription className="text-zinc-400">
+          <DialogDescription className="text-text-secondary">
             {project ? 'Update the project details below.' : 'Fill in the details to create a new project.'}
           </DialogDescription>
         </DialogHeader>
@@ -115,7 +115,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Website Redesign"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
                 required
               />
             </div>
@@ -126,10 +126,10 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 value={formData.client_id || "none"}
                 onValueChange={(v) => setFormData({ ...formData, client_id: v === "none" ? "" : v })}
               >
-                <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                <SelectTrigger className="bg-surface-raised border-border-default">
                   <SelectValue placeholder="Select client" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectContent className="bg-surface-raised border-border-default">
                   <SelectItem value="none">No client</SelectItem>
                   {clients?.map((client) => (
                     <SelectItem key={client.id} value={client.id}>
@@ -147,7 +147,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Brief description of the project..."
-              className="bg-zinc-800 border-zinc-700 min-h-[80px]"
+              className="bg-surface-raised border-border-default min-h-[80px]"
             />
           </div>
 
@@ -158,10 +158,10 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 value={formData.status}
                 onValueChange={(v) => setFormData({ ...formData, status: v as ProjectStatus })}
               >
-                <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                <SelectTrigger className="bg-surface-raised border-border-default">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectContent className="bg-surface-raised border-border-default">
                   <SelectItem value="draft">Draft</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
                   <SelectItem value="on_hold">On Hold</SelectItem>
@@ -177,10 +177,10 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 value={formData.project_type}
                 onValueChange={(v) => setFormData({ ...formData, project_type: v as ProjectType })}
               >
-                <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                <SelectTrigger className="bg-surface-raised border-border-default">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectContent className="bg-surface-raised border-border-default">
                   <SelectItem value="automation">Automation</SelectItem>
                   <SelectItem value="internal_system">Internal System</SelectItem>
                   <SelectItem value="mvp">MVP</SelectItem>
@@ -199,10 +199,10 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 value={formData.budget_type}
                 onValueChange={(v) => setFormData({ ...formData, budget_type: v as BudgetType })}
               >
-                <SelectTrigger className="bg-zinc-800 border-zinc-700">
+                <SelectTrigger className="bg-surface-raised border-border-default">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-800 border-zinc-700">
+                <SelectContent className="bg-surface-raised border-border-default">
                   <SelectItem value="hourly">Hourly</SelectItem>
                   <SelectItem value="fixed">Fixed Price</SelectItem>
                   <SelectItem value="retainer">Retainer</SelectItem>
@@ -217,7 +217,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                   type="number"
                   value={formData.hourly_rate}
                   onChange={(e) => setFormData({ ...formData, hourly_rate: parseFloat(e.target.value) || 0 })}
-                  className="bg-zinc-800 border-zinc-700"
+                  className="bg-surface-raised border-border-default"
                 />
               </div>
             ) : (
@@ -227,7 +227,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                   type="number"
                   value={formData.budget_amount || ''}
                   onChange={(e) => setFormData({ ...formData, budget_amount: parseFloat(e.target.value) || null })}
-                  className="bg-zinc-800 border-zinc-700"
+                  className="bg-surface-raised border-border-default"
                 />
               </div>
             )}
@@ -238,7 +238,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 type="number"
                 value={formData.estimated_hours || ''}
                 onChange={(e) => setFormData({ ...formData, estimated_hours: parseFloat(e.target.value) || null })}
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
               />
             </div>
           </div>
@@ -250,7 +250,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 type="date"
                 value={formData.start_date}
                 onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
               />
             </div>
 
@@ -260,7 +260,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
                 type="date"
                 value={formData.end_date}
                 onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
               />
             </div>
           </div>
@@ -270,13 +270,13 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+              className="border-border-default text-text-primary hover:bg-surface-raised"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-brand hover:bg-brand-hover text-white"
               disabled={createProject.isPending || updateProject.isPending}
             >
               {project ? 'Update' : 'Create'} Project

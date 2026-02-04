@@ -95,13 +95,13 @@ export function InviteClientDialog({ open, onOpenChange, clientId, clientName }:
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-lg">
+      <DialogContent className="bg-surface-raised border-border-default text-text-primary max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5" />
             Portal Access for {clientName}
           </DialogTitle>
-          <DialogDescription className="text-zinc-400">
+          <DialogDescription className="text-text-secondary">
             Invite clients to view their projects in the portal.
           </DialogDescription>
         </DialogHeader>
@@ -117,11 +117,11 @@ export function InviteClientDialog({ open, onOpenChange, clientId, clientName }:
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="client@company.com"
-                  className="bg-zinc-800 border-zinc-700"
+                  className="bg-surface-raised border-border-default"
                 />
                 <Button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-brand hover:bg-brand-hover text-white"
                   disabled={createInvitation.isPending}
                 >
                   <Mail className="h-4 w-4 mr-2" />
@@ -134,30 +134,30 @@ export function InviteClientDialog({ open, onOpenChange, clientId, clientName }:
           {/* Current Users */}
           {users && users.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+              <div className="flex items-center gap-2 text-sm font-medium text-text-secondary">
                 <Users className="h-4 w-4" />
                 Users with Access ({users.length})
               </div>
               {users.map((user) => (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-zinc-800"
+                  className="flex items-center justify-between p-3 rounded-lg bg-surface-raised"
                 >
                   <div>
-                    <p className="text-sm text-white">{user.invited_by}</p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-sm text-text-primary">{user.invited_by}</p>
+                    <p className="text-xs text-text-muted">
                       Joined {format(new Date(user.accepted_at || user.created_at), 'MMM d, yyyy')}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="border-zinc-600 text-zinc-400">
+                    <Badge variant="outline" className="border-border-default text-text-secondary">
                       {user.role}
                     </Badge>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRemoveAccess(user.id)}
-                      className="text-zinc-400 hover:text-red-500"
+                      className="text-text-secondary hover:text-red-500"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -170,18 +170,18 @@ export function InviteClientDialog({ open, onOpenChange, clientId, clientName }:
           {/* Pending Invitations */}
           {invitations && invitations.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+              <div className="flex items-center gap-2 text-sm font-medium text-text-secondary">
                 <Clock className="h-4 w-4" />
                 Pending Invitations ({invitations.length})
               </div>
               {invitations.map((inv) => (
                 <div
                   key={inv.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-zinc-800"
+                  className="flex items-center justify-between p-3 rounded-lg bg-surface-raised"
                 >
                   <div>
-                    <p className="text-sm text-white">{inv.email}</p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-sm text-text-primary">{inv.email}</p>
+                    <p className="text-xs text-text-muted">
                       Expires {format(new Date(inv.expires_at), 'MMM d, yyyy')}
                     </p>
                   </div>
@@ -190,7 +190,7 @@ export function InviteClientDialog({ open, onOpenChange, clientId, clientName }:
                       variant="outline"
                       size="sm"
                       onClick={() => handleResendEmail(inv.id, inv.email)}
-                      className="border-zinc-700 text-zinc-300 hover:bg-zinc-700"
+                      className="border-border-default text-text-primary hover:bg-surface-hover"
                       title="Resend invitation email"
                     >
                       <RefreshCw className="h-4 w-4" />
@@ -199,11 +199,11 @@ export function InviteClientDialog({ open, onOpenChange, clientId, clientName }:
                       variant="outline"
                       size="sm"
                       onClick={() => copyInviteLink(inv.token)}
-                      className="border-zinc-700 text-zinc-300 hover:bg-zinc-700"
+                      className="border-border-default text-text-primary hover:bg-surface-hover"
                       title="Copy invitation link"
                     >
                       {copiedToken === inv.token ? (
-                        <Check className="h-4 w-4 text-emerald-500" />
+                        <Check className="h-4 w-4 text-brand" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}
@@ -215,8 +215,8 @@ export function InviteClientDialog({ open, onOpenChange, clientId, clientName }:
           )}
 
           {/* Help Text */}
-          <div className="p-3 rounded-lg bg-zinc-800 text-sm text-zinc-400">
-            <p className="font-medium text-zinc-300 mb-1">How it works:</p>
+          <div className="p-3 rounded-lg bg-surface-raised text-sm text-text-secondary">
+            <p className="font-medium text-text-primary mb-1">How it works:</p>
             <ol className="list-decimal list-inside space-y-1">
               <li>Enter the client&apos;s email and click Invite</li>
               <li>Send them the copied link</li>

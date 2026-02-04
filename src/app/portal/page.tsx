@@ -63,7 +63,7 @@ export default function PortalDashboard() {
   if (authLoading || accessLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
+        <Loader2 className="h-8 w-8 text-brand animate-spin" />
       </div>
     )
   }
@@ -78,22 +78,22 @@ export default function PortalDashboard() {
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900">
+      <header className="border-b border-border-default bg-input-bg">
         <div className="max-w-6xl mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-3">
             <Image src={appConfig.logo} alt={appConfig.name} width={28} height={28} className="h-6 w-6 md:h-7 md:w-7" />
             <div>
-              <span className="text-base md:text-lg font-bold text-white">{appConfig.name}</span>
-              <span className="text-zinc-500 text-xs md:text-sm ml-1 md:ml-2 hidden sm:inline">Client Portal</span>
+              <span className="text-base md:text-lg font-bold text-text-primary">{appConfig.name}</span>
+              <span className="text-text-muted text-xs md:text-sm ml-1 md:ml-2 hidden sm:inline">Client Portal</span>
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
-            <span className="text-xs md:text-sm text-zinc-400 hidden sm:block truncate max-w-[150px]">{user.email}</span>
+            <span className="text-xs md:text-sm text-text-secondary hidden sm:block truncate max-w-[150px]">{user.email}</span>
             <Button
               variant="outline"
               size="sm"
               onClick={handleSignOut}
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 text-xs md:text-sm h-8"
+              className="border-border-default text-text-primary hover:bg-surface-raised text-xs md:text-sm h-8"
             >
               <LogOut className="h-4 w-4 md:mr-2" />
               <span className="hidden md:inline">Sign Out</span>
@@ -106,53 +106,53 @@ export default function PortalDashboard() {
       <main className="max-w-6xl mx-auto px-4 py-4 md:py-8">
         {/* Welcome */}
         <div className="mb-6 md:mb-8">
-          <h1 className="text-xl md:text-2xl font-bold text-white">
+          <h1 className="text-xl md:text-2xl font-bold text-text-primary">
             Welcome, {clientName}
           </h1>
-          <p className="text-sm md:text-base text-zinc-400">Track your projects and see progress in real-time.</p>
+          <p className="text-sm md:text-base text-text-secondary">Track your projects and see progress in real-time.</p>
         </div>
 
         {/* Stats */}
         <div className="grid gap-3 md:gap-4 grid-cols-3 mb-6 md:mb-8">
-          <Card className="bg-zinc-900 border-zinc-800">
+          <Card className="bg-surface-raised border-border-default">
             <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-4">
-              <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Total</CardTitle>
-              <FolderKanban className="h-4 w-4 text-emerald-500 hidden sm:block" />
+              <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Total</CardTitle>
+              <FolderKanban className="h-4 w-4 text-brand hidden sm:block" />
             </CardHeader>
             <CardContent className="p-3 md:p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold text-white">{projects?.length || 0}</div>
+              <div className="text-xl md:text-2xl font-bold text-text-primary">{projects?.length || 0}</div>
             </CardContent>
           </Card>
-          <Card className="bg-zinc-900 border-zinc-800">
+          <Card className="bg-surface-raised border-border-default">
             <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-4">
-              <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Active</CardTitle>
+              <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Active</CardTitle>
               <Clock className="h-4 w-4 text-blue-500 hidden sm:block" />
             </CardHeader>
             <CardContent className="p-3 md:p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold text-white">{activeProjects}</div>
+              <div className="text-xl md:text-2xl font-bold text-text-primary">{activeProjects}</div>
             </CardContent>
           </Card>
-          <Card className="bg-zinc-900 border-zinc-800">
+          <Card className="bg-surface-raised border-border-default">
             <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 md:p-4">
-              <CardTitle className="text-xs md:text-sm font-medium text-zinc-400">Done</CardTitle>
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 hidden sm:block" />
+              <CardTitle className="text-xs md:text-sm font-medium text-text-secondary">Done</CardTitle>
+              <CheckCircle2 className="h-4 w-4 text-brand hidden sm:block" />
             </CardHeader>
             <CardContent className="p-3 md:p-4 pt-0">
-              <div className="text-xl md:text-2xl font-bold text-white">{completedProjects}</div>
+              <div className="text-xl md:text-2xl font-bold text-text-primary">{completedProjects}</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Projects */}
-        <h2 className="text-base md:text-lg font-semibold text-white mb-3 md:mb-4">Your Projects</h2>
+        <h2 className="text-base md:text-lg font-semibold text-text-primary mb-3 md:mb-4">Your Projects</h2>
         {projectsLoading ? (
-          <div className="text-zinc-400 text-sm">Loading projects...</div>
+          <div className="text-text-secondary text-sm">Loading projects...</div>
         ) : !projects?.length ? (
-          <Card className="bg-zinc-900 border-zinc-800">
+          <Card className="bg-surface-raised border-border-default">
             <CardContent className="flex flex-col items-center justify-center py-8 md:py-12 px-4">
               <FolderKanban className="h-12 w-12 md:h-16 md:w-16 text-zinc-700" />
-              <h3 className="mt-4 text-base md:text-lg font-medium text-white text-center">No projects yet</h3>
-              <p className="mt-2 text-zinc-400 text-center text-sm">
+              <h3 className="mt-4 text-base md:text-lg font-medium text-text-primary text-center">No projects yet</h3>
+              <p className="mt-2 text-text-secondary text-center text-sm">
                 Once we start working together, your projects will appear here.
               </p>
             </CardContent>
@@ -161,21 +161,21 @@ export default function PortalDashboard() {
           <div className="grid gap-3 md:gap-4 sm:grid-cols-2">
             {projects.map((project) => (
               <Link key={project.id} href={`/portal/projects/${project.id}`}>
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors cursor-pointer h-full">
+                <Card className="bg-surface-raised border-border-default hover:border-border-default transition-colors cursor-pointer h-full">
                   <CardContent className="p-3 md:p-4">
                     <div className="flex items-start justify-between mb-2 md:mb-3 gap-2">
-                      <Badge className={cn('text-white border-0 text-xs', statusColors[project.status])}>
+                      <Badge className={cn('text-text-primary border-0 text-xs', statusColors[project.status])}>
                         {statusLabels[project.status]}
                       </Badge>
                       {project.start_date && (
-                        <span className="text-xs text-zinc-500 flex-shrink-0">
+                        <span className="text-xs text-text-muted flex-shrink-0">
                           {format(new Date(project.start_date), 'MMM d')}
                         </span>
                       )}
                     </div>
-                    <h3 className="text-base md:text-lg font-semibold text-white mb-1 line-clamp-1">{project.name}</h3>
+                    <h3 className="text-base md:text-lg font-semibold text-text-primary mb-1 line-clamp-1">{project.name}</h3>
                     {project.description && (
-                      <p className="text-xs md:text-sm text-zinc-400 line-clamp-2">{project.description}</p>
+                      <p className="text-xs md:text-sm text-text-secondary line-clamp-2">{project.description}</p>
                     )}
                   </CardContent>
                 </Card>

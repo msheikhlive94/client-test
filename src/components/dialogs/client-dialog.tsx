@@ -83,7 +83,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-lg">
+      <DialogContent className="bg-surface-raised border-border-default text-text-primary max-w-lg">
         <DialogHeader>
           <DialogTitle>{client ? 'Edit Client' : 'New Client'}</DialogTitle>
         </DialogHeader>
@@ -95,7 +95,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Acme Corp"
-              className="bg-zinc-800 border-zinc-700"
+              className="bg-surface-raised border-border-default"
               required
             />
           </div>
@@ -107,7 +107,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
                 value={formData.contact_name}
                 onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
                 placeholder="John Doe"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
               />
             </div>
 
@@ -118,7 +118,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="john@acme.com"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
               />
             </div>
           </div>
@@ -130,7 +130,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+49 123 456789"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
               />
             </div>
 
@@ -140,7 +140,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 placeholder="Parent company (if different)"
-                className="bg-zinc-800 border-zinc-700"
+                className="bg-surface-raised border-border-default"
               />
             </div>
           </div>
@@ -151,7 +151,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               placeholder="123 Main St, Berlin"
-              className="bg-zinc-800 border-zinc-700"
+              className="bg-surface-raised border-border-default"
             />
           </div>
 
@@ -161,7 +161,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               placeholder="Any additional notes about this client..."
-              className="bg-zinc-800 border-zinc-700 min-h-[80px]"
+              className="bg-surface-raised border-border-default min-h-[80px]"
             />
           </div>
 
@@ -170,13 +170,13 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+              className="border-border-default text-text-primary hover:bg-surface-raised"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-brand hover:bg-brand-hover text-white"
               disabled={createClient.isPending || updateClient.isPending}
             >
               {client ? 'Update' : 'Create'} Client

@@ -44,10 +44,32 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* TaskFlow Pro brand colors */
+  --color-brand: var(--tf-brand);
+  --color-brand-hover: var(--tf-brand-hover);
+  --color-brand-secondary: var(--tf-brand-secondary);
+  --color-brand-muted: var(--tf-brand-muted);
+  --color-surface: var(--tf-surface);
+  --color-surface-hover: var(--tf-surface-hover);
+  --color-surface-raised: var(--tf-surface-raised);
+  --color-text-primary: var(--tf-text-primary);
+  --color-text-secondary: var(--tf-text-secondary);
+  --color-text-muted: var(--tf-text-muted);
+  --color-border-default: var(--tf-border);
+  --color-border-subtle: var(--tf-border-subtle);
+  --color-page-bg: var(--tf-page-bg);
+  --color-sidebar-bg: var(--tf-sidebar-bg);
+  --color-input-bg: var(--tf-input-bg);
 }
 
+/* ═══════════════════════════════════════════
+   LIGHT THEME (default :root)
+   ═══════════════════════════════════════════ */
 :root {
   --radius: 0.625rem;
+
+  /* shadcn/ui tokens */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -79,8 +101,28 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* TaskFlow Pro brand tokens — light */
+  --tf-brand: #059669;
+  --tf-brand-hover: #047857;
+  --tf-brand-secondary: #4f46e5;
+  --tf-brand-muted: rgba(5, 150, 105, 0.1);
+  --tf-surface: #f5f5f5;
+  --tf-surface-hover: #e5e5e5;
+  --tf-surface-raised: #ffffff;
+  --tf-text-primary: #171717;
+  --tf-text-secondary: #525252;
+  --tf-text-muted: #a3a3a3;
+  --tf-border: #e5e5e5;
+  --tf-border-subtle: #f0f0f0;
+  --tf-page-bg: #ffffff;
+  --tf-sidebar-bg: #f9fafb;
+  --tf-input-bg: #ffffff;
 }
 
+/* ═══════════════════════════════════════════
+   DARK THEME
+   ═══════════════════════════════════════════ */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -113,6 +155,23 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* TaskFlow Pro brand tokens — dark */
+  --tf-brand: #10b981;
+  --tf-brand-hover: #059669;
+  --tf-brand-secondary: #6366f1;
+  --tf-brand-muted: rgba(16, 185, 129, 0.1);
+  --tf-surface: #171717;
+  --tf-surface-hover: #262626;
+  --tf-surface-raised: #1e1e1e;
+  --tf-text-primary: #fafafa;
+  --tf-text-secondary: #a3a3a3;
+  --tf-text-muted: #525252;
+  --tf-border: #262626;
+  --tf-border-subtle: #1e1e1e;
+  --tf-page-bg: #0a0a0a;
+  --tf-sidebar-bg: #0a0a0a;
+  --tf-input-bg: #0a0a0a;
 }
 
 @layer base {
@@ -120,7 +179,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-page-bg text-text-primary;
   }
   html {
     scroll-behavior: smooth;
@@ -142,11 +201,6 @@
 .kanban-card-animate {
   animation: kanban-card-enter 0.35s ease-out backwards;
   animation-delay: calc(var(--card-index, 0) * 50ms);
-}
-
-/* Smooth hover transition for cards */
-.hover\:bg-zinc-750:hover {
-  background-color: rgb(39 39 42 / 0.9);
 }
 
 /* Setup wizard step transition */
@@ -172,4 +226,12 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Theme transition */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s ease, color 0.15s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
