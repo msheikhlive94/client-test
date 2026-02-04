@@ -19,6 +19,16 @@ export default function AdminLayout({
     const checkAuth = async () => {
       const supabase = createClient()
 
+      // Check if setup has been completed (any admin exists)
+      const { count } = await supabase
+        .from('admin_users')
+        .select('*', { count: 'exact', head: true })
+
+      if (count === 0) {
+        router.replace('/setup')
+        return
+      }
+
       const { data: { user } } = await supabase.auth.getUser()
 
       if (!user) {

@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Public routes that don't need auth
-  const publicRoutes = ['/login', '/onboard', '/portal']
+  const publicRoutes = ['/login', '/onboard', '/portal', '/setup', '/api/setup']
   const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
 
   // If accessing admin routes without auth, redirect to login

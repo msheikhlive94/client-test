@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -17,9 +17,36 @@ function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isCheckingSetup, setIsCheckingSetup] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const unauthorizedError = searchParams.get('error') === 'unauthorized'
+
+  // Check if setup is needed before showing login
+  useEffect(() => {
+    const checkSetup = async () => {
+      try {
+        const res = await fetch('/api/setup')
+        const json = await res.json()
+        if (json.setupRequired) {
+          router.replace('/setup')
+          return
+        }
+      } catch {
+        // If check fails, show login normally
+      }
+      setIsCheckingSetup(false)
+    }
+    checkSetup()
+  }, [router])
+
+  if (isCheckingSetup) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+      </div>
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
