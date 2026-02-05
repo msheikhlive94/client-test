@@ -243,6 +243,104 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white antialiased">
+      {/* Schema.org Structured Data for AI Engines */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "SoftwareApplication",
+                "@id": "https://projoflow.com/#software",
+                "name": "ProjoFlow",
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web",
+                "description": "The first project management tool your AI assistant can control. Built on Model Context Protocol (MCP) for agencies, consultancies, and dev teams.",
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "name": "Pro Plan",
+                    "price": "29",
+                    "priceCurrency": "USD",
+                    "priceSpecification": {
+                      "@type": "UnitPriceSpecification",
+                      "price": "29.00",
+                      "priceCurrency": "USD",
+                      "unitText": "MONTH"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Business Plan",
+                    "price": "79",
+                    "priceCurrency": "USD",
+                    "priceSpecification": {
+                      "@type": "UnitPriceSpecification",
+                      "price": "79.00",
+                      "priceCurrency": "USD",
+                      "unitText": "MONTH"
+                    }
+                  }
+                ],
+                "featureList": [
+                  "AI Assistant Integration (MCP)",
+                  "Multi-Tenant Workspaces",
+                  "Client Portal",
+                  "Time Tracking & Billing",
+                  "White-Label Branding",
+                  "@Mentions & Comments"
+                ],
+                "creator": {
+                  "@type": "Organization",
+                  "@id": "https://projoflow.com/#organization"
+                }
+              },
+              {
+                "@type": "Organization",
+                "@id": "https://projoflow.com/#organization",
+                "name": "Z-Flow",
+                "url": "https://z-flow.de",
+                "logo": "https://projoflow.com/logo.svg",
+                "sameAs": [],
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "email": "tech@z-flow.de",
+                  "contactType": "customer support"
+                }
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://projoflow.com/#website",
+                "url": "https://projoflow.com",
+                "name": "ProjoFlow",
+                "description": "AI-powered project management for agencies",
+                "publisher": {
+                  "@id": "https://projoflow.com/#organization"
+                }
+              },
+              {
+                "@type": "WebPage",
+                "@id": "https://projoflow.com/#webpage",
+                "url": "https://projoflow.com",
+                "name": "ProjoFlow - AI-Powered Project Management",
+                "description": "The first PM tool your AI can control. Built on MCP for agencies, consultancies, and dev teams.",
+                "isPartOf": {
+                  "@id": "https://projoflow.com/#website"
+                },
+                "about": {
+                  "@id": "https://projoflow.com/#software"
+                },
+                "primaryImageOfPage": {
+                  "@type": "ImageObject",
+                  "url": "https://projoflow.com/logo.svg"
+                }
+              }
+            ]
+          })
+        }}
+      />
+
       {/* ── Navbar ── */}
       <nav className="fixed top-0 z-50 w-full border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
