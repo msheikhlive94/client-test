@@ -31,6 +31,8 @@ import {
   Database,
   CheckCircle2,
   XCircle,
+  Shield,
+  Key,
 } from 'lucide-react'
 import { appConfig } from '@/lib/config/theme'
 
@@ -48,7 +50,7 @@ interface SetupData {
   projectDescription: string
 }
 
-const TOTAL_STEPS = 6
+const TOTAL_STEPS = 7
 
 /* ------------------------------------------------------------------ */
 /*  Progress Dots                                                      */
@@ -111,8 +113,9 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
       </div>
 
       <div className="flex flex-col items-center gap-3 pt-2">
-        <div className="grid grid-cols-4 gap-3 text-center max-w-lg w-full">
+        <div className="grid grid-cols-5 gap-3 text-center max-w-2xl w-full">
           {[
+            { icon: Key, label: 'License' },
             { icon: Database, label: 'Database' },
             { icon: KeyRound, label: 'Account' },
             { icon: Building2, label: 'Workspace' },
@@ -141,7 +144,161 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 2 — Database Setup (Migrations)                               */
+/*  Step 2 — License Key Validation                                    */
+/* ------------------------------------------------------------------ */
+
+function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
+  const [licenseKey, setLicenseKey] = useState('')
+  const [isValidating, setIsValidating] = useState(false)
+  const [isValid, setIsValid] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [productInfo, setProductInfo] = useState<any>(null)
+
+  const validateLicense = async () => {
+    if (!licenseKey.trim()) {
+      setError('Please enter your license key')
+      return
+    }
+
+    setIsValidating(true)
+    setError(null)
+
+    try {
+      const res = await fetch('/api/license/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ licenseKey }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || !data.valid) {
+        setError(data.error || 'Invalid license key')
+        setIsValidating(false)
+        return
+      }
+
+      setProductInfo(data)
+      setIsValid(true)
+      setIsValidating(false)
+    } catch (err: any) {
+      setError(err.message || 'Failed to validate license')
+      setIsValidating(false)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isValidating) {
+      validateLicense()
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="text-center space-y-1">
+        <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 mb-2">
+          <Key className="h-6 w-6 text-brand" />
+        </div>
+        <h2 className="text-xl font-semibold text-text-primary">
+          Enter Your License Key
+        </h2>
+        <p className="text-text-secondary text-sm">
+          Enter the license key from your purchase email to continue.
+        </p>
+      </div>
+
+      {!isValid && (
+        <>
+          {error && (
+            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-2">
+              <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm text-red-400">{error}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-text-primary">License Key</Label>
+              <Input
+                type="text"
+                value={licenseKey}
+                onChange={(e) => setLicenseKey(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="PJ-XXXXX-XXXXX-XXXXX"
+                className="bg-zinc-800 border-border-default h-10 font-mono text-sm"
+                disabled={isValidating}
+                autoFocus
+              />
+              <div className="text-xs text-text-muted space-y-1">
+                <p>
+                  📧 Check your purchase email for your license key.
+                </p>
+                <p>
+                  Format: <code className="text-brand">PJ-XXXXX-XXXXX-XXXXX</code>
+                </p>
+                <p className="text-amber-400">
+                  💡 Lost your key? Email support@projoflow.com
+                </p>
+              </div>
+            </div>
+
+            <Button
+              onClick={validateLicense}
+              disabled={isValidating || !licenseKey.trim()}
+              className="w-full bg-brand hover:bg-brand-hover text-white"
+            >
+              {isValidating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Validating...
+                </>
+              ) : (
+                <>
+                  <Shield className="mr-2 h-4 w-4" />
+                  Validate License
+                </>
+              )}
+            </Button>
+          </div>
+        </>
+      )}
+
+      {isValid && productInfo && (
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-emerald-500/10">
+            <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-lg font-semibold text-text-primary">
+              License Verified!
+            </h3>
+            <p className="text-text-secondary text-sm">
+              {productInfo.message}
+            </p>
+            {productInfo.purchaseEmail && (
+              <p className="text-xs text-text-muted">
+                Licensed to: {productInfo.purchaseEmail}
+              </p>
+            )}
+          </div>
+
+          <Button
+            onClick={onComplete}
+            className="bg-brand hover:bg-brand-hover text-white"
+          >
+            Continue Setup
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Step 3 — Database Setup (Migrations)                               */
 /* ------------------------------------------------------------------ */
 
 function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
@@ -314,7 +471,7 @@ function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 3 — Create Admin Account                                      */
+/*  Step 4 — Create Admin Account                                      */
 /* ------------------------------------------------------------------ */
 
 function StepAdminAccount({
@@ -619,7 +776,7 @@ export default function SetupPage() {
   }
 
   /* ---- Validation ---- */
-  const canProceedStep3 =
+  const canProceedStep4 =
     data.email.length > 0 &&
     data.password.length >= 6 &&
     data.password === data.confirmPassword
@@ -629,12 +786,14 @@ export default function SetupPage() {
       case 1:
         return true
       case 2:
-        return false // Database migration handles its own navigation
+        return false // License validation handles its own navigation
       case 3:
-        return canProceedStep3
+        return false // Database migration handles its own navigation
       case 4:
-        return true // workspace settings are optional
+        return canProceedStep4
       case 5:
+        return true // workspace settings are optional
+      case 6:
         return true // project is optional
       default:
         return true
@@ -698,8 +857,8 @@ export default function SetupPage() {
 
   /* ---- Step advance handler ---- */
   const handleNext = async () => {
-    // On step 5, submit everything before moving to step 6
-    if (step === 5) {
+    // On step 6, submit everything before moving to step 7
+    if (step === 6) {
       await handleSubmit()
       return
     }
@@ -736,23 +895,24 @@ export default function SetupPage() {
             }
           >
             {step === 1 && <StepWelcome onNext={goNext} />}
-            {step === 2 && <StepDatabaseMigration onComplete={goNext} />}
-            {step === 3 && (
+            {step === 2 && <StepLicenseKey onComplete={goNext} />}
+            {step === 3 && <StepDatabaseMigration onComplete={goNext} />}
+            {step === 4 && (
               <StepAdminAccount
                 data={data}
                 onChange={updateData}
                 error={error}
               />
             )}
-            {step === 4 && <StepWorkspace data={data} onChange={updateData} />}
-            {step === 5 && (
+            {step === 5 && <StepWorkspace data={data} onChange={updateData} />}
+            {step === 6 && (
               <StepFirstProject data={data} onChange={updateData} />
             )}
-            {step === 6 && <StepComplete />}
+            {step === 7 && <StepComplete />}
           </div>
 
-          {/* Navigation buttons (hidden for step 1, 2, and 6) */}
-          {step > 2 && step < TOTAL_STEPS && (
+          {/* Navigation buttons (hidden for step 1, 2, 3, and 7) */}
+          {step > 3 && step < TOTAL_STEPS && (
             <div className="flex items-center justify-between mt-8 pt-4 border-t border-border-default">
               <Button
                 variant="ghost"
@@ -765,7 +925,7 @@ export default function SetupPage() {
               </Button>
 
               <div className="flex gap-2">
-                {step === 5 && (
+                {step === 6 && (
                   <Button
                     variant="ghost"
                     onClick={() => {
@@ -790,7 +950,7 @@ export default function SetupPage() {
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Setting up...
                     </>
-                  ) : step === 5 ? (
+                  ) : step === 6 ? (
                     <>
                       <Sparkles className="mr-1 h-4 w-4" />
                       Complete Setup

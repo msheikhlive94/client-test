@@ -5,6 +5,17 @@ One-time license · Self-hosted · Full branding · Native AI integration (MCP)
 
 ---
 
+## 🔐 License Required
+
+**This is open-source code, but requires a valid license key to use.**
+
+- 📦 **Purchase:** [Get your license](https://projoflow.com/purchase)
+- 🔑 **License key** required during setup
+- 💰 **One-time payment** — no recurring fees
+- 🔄 **Free updates forever**
+
+---
+
 ## 🚀 What You Get
 
 - ✅ **Full source code** (Next.js, React, TypeScript, Supabase)
@@ -14,7 +25,7 @@ One-time license · Self-hosted · Full branding · Native AI integration (MCP)
 - ✅ **Time tracking & billing**
 - ✅ **@Mentions, comments, file attachments**
 - ✅ **Free updates forever** (via GitHub)
-- ✅ **One-time payment** (no recurring fees)
+- ✅ **Lifetime license** (one-time payment)
 
 ---
 
@@ -40,6 +51,7 @@ One-time license · Self-hosted · Full branding · Native AI integration (MCP)
 ## ⚙️ Quick Start
 
 ### Prerequisites
+- **Valid ProjoFlow license key** ([purchase here](https://projoflow.com/purchase))
 - Node.js 20+ and npm/pnpm/yarn
 - Supabase account (free tier works)
 - Vercel account (optional, for one-click deploy)
@@ -52,7 +64,9 @@ One-time license · Self-hosted · Full branding · Native AI integration (MCP)
 2. Connect your GitHub account
 3. Create a Supabase project
 4. Add environment variables (see below)
-5. Deploy! 🎉
+5. Deploy!
+6. Visit `/setup` and **enter your license key**
+7. Complete setup wizard 🎉
 
 ### Option 2: Manual Setup
 
@@ -93,6 +107,8 @@ One-time license · Self-hosted · Full branding · Native AI integration (MCP)
    ```bash
    npm run dev
    # Visit http://localhost:3000/setup
+   # Enter your license key
+   # Setup database migrations
    # Create your admin account
    ```
 
@@ -159,6 +175,22 @@ ProjoFlow includes a [Model Context Protocol](https://modelcontextprotocol.io) s
 - **Per-workspace isolation** (no cross-tenant data leakage)
 - **Auth handled by Supabase** (OAuth, magic links, email/password)
 - **Environment variables** for secrets (never commit credentials)
+
+---
+
+## ❓ FAQ
+
+### Can I use this without a license?
+No. While the source code is publicly viewable, the setup wizard requires a valid license key to proceed. You won't be able to complete installation without one.
+
+### What if I lose my license key?
+Email support@projoflow.com with your purchase email and we'll resend it.
+
+### Can I use one license for multiple deployments?
+Yes! The license is per entity (your agency/company), not per deployment. Use it for all your client projects.
+
+### Do I need to keep the license key after setup?
+No. The license is validated once during setup. After that, you can delete it from your records (but we recommend keeping it safe for future deployments).
 
 ---
 
