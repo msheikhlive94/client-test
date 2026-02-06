@@ -6,9 +6,6 @@ import Image from 'next/image'
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,21 +15,20 @@ import {
   AlertCircle,
   ArrowRight,
   ArrowLeft,
-  Check,
   Sparkles,
   Building2,
-  FolderPlus,
   Rocket,
-  SkipForward,
   KeyRound,
   Keyboard,
   Users,
   LayoutDashboard,
   Database,
   CheckCircle2,
-  XCircle,
   Shield,
   Key,
+  ChevronDown,
+  ChevronUp,
+  Search,
 } from 'lucide-react'
 import { appConfig } from '@/lib/config/theme'
 
@@ -46,11 +42,9 @@ interface SetupData {
   confirmPassword: string
   companyName: string
   logoUrl: string
-  projectName: string
-  projectDescription: string
 }
 
-const TOTAL_STEPS = 7
+const TOTAL_STEPS = 4
 
 /* ------------------------------------------------------------------ */
 /*  Progress Dots                                                      */
@@ -84,67 +78,7 @@ function StepIndicator({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 1 — Welcome                                                   */
-/* ------------------------------------------------------------------ */
-
-function StepWelcome({ onNext }: { onNext: () => void }) {
-  return (
-    <div className="text-center space-y-6">
-      <div className="flex items-center justify-center gap-3 mb-2">
-        <Image
-          src={appConfig.logo}
-          alt={appConfig.name}
-          width={48}
-          height={48}
-          className="h-12 w-12"
-        />
-        <h1 className="text-3xl font-bold text-text-primary">{appConfig.name}</h1>
-      </div>
-
-      <div className="space-y-3">
-        <h2 className="text-xl font-semibold text-text-primary">
-          Welcome to {appConfig.name}
-        </h2>
-        <p className="text-text-secondary max-w-md mx-auto leading-relaxed">
-          Let&apos;s get your workspace set up in under 2 minutes. You&apos;ll
-          create your admin account, configure your workspace, and optionally
-          set up your first project.
-        </p>
-      </div>
-
-      <div className="flex flex-col items-center gap-3 pt-2">
-        <div className="grid grid-cols-5 gap-3 text-center max-w-2xl w-full">
-          {[
-            { icon: Key, label: 'License' },
-            { icon: Database, label: 'Database' },
-            { icon: KeyRound, label: 'Account' },
-            { icon: Building2, label: 'Workspace' },
-            { icon: FolderPlus, label: 'Project' },
-          ].map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-800/50"
-            >
-              <Icon className="h-5 w-5 text-brand" />
-              <span className="text-xs text-text-secondary">{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Button
-        onClick={onNext}
-        className="bg-brand hover:bg-brand-hover text-white text-text-primary px-8 h-11 text-base"
-      >
-        Get Started
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Step 2 — License Key Validation                                    */
+/*  Step 1 — License Key Validation                                    */
 /* ------------------------------------------------------------------ */
 
 function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
@@ -153,6 +87,7 @@ function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
   const [isValid, setIsValid] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [productInfo, setProductInfo] = useState<any>(null)
+  const [showHelp, setShowHelp] = useState(false)
 
   const validateLicense = async () => {
     if (!licenseKey.trim()) {
@@ -196,6 +131,16 @@ function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
   return (
     <div className="space-y-5">
       <div className="text-center space-y-1">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <Image
+            src={appConfig.logo}
+            alt={appConfig.name}
+            width={40}
+            height={40}
+            className="h-10 w-10"
+          />
+          <h1 className="text-2xl font-bold text-text-primary">{appConfig.name}</h1>
+        </div>
         <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 mb-2">
           <Key className="h-6 w-6 text-brand" />
         </div>
@@ -203,7 +148,7 @@ function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
           Enter Your License Key
         </h2>
         <p className="text-text-secondary text-sm">
-          Enter the license key from your purchase email to continue.
+          Set up your workspace in under 2 minutes. Enter the license key from your purchase email.
         </p>
       </div>
 
@@ -231,18 +176,32 @@ function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
                 disabled={isValidating}
                 autoFocus
               />
-              <div className="text-xs text-text-muted space-y-1">
-                <p>
-                  📧 Check your purchase email for your license key.
-                </p>
-                <p>
-                  Format: <code className="text-brand">PJ-XXXXX-XXXXX-XXXXX</code>
-                </p>
-                <p className="text-amber-400">
-                  💡 Lost your key? Email support@projoflow.com
+              <p className="text-xs text-text-muted">
+                Format: <code className="text-brand">PJ-XXXXX-XXXXX-XXXXX</code>
+              </p>
+            </div>
+
+            {/* Expandable help section */}
+            <button
+              type="button"
+              onClick={() => setShowHelp(!showHelp)}
+              className="flex items-center gap-1.5 text-xs text-text-muted hover:text-text-secondary transition-colors"
+            >
+              <Search className="h-3 w-3" />
+              <span>Can&apos;t find your key?</span>
+              {showHelp ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+            </button>
+
+            {showHelp && (
+              <div className="p-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50 space-y-2 text-xs text-text-muted">
+                <p>1. Check the confirmation email from your purchase platform (Gumroad, LemonSqueezy, or Stripe)</p>
+                <p>2. Search your inbox for &quot;ProjoFlow&quot; or &quot;PJ-&quot;</p>
+                <p>3. Check spam/promotions folders</p>
+                <p className="text-amber-400 pt-1">
+                  Still can&apos;t find it? Email {appConfig.supportEmail}
                 </p>
               </div>
-            </div>
+            )}
 
             <Button
               onClick={validateLicense}
@@ -298,25 +257,65 @@ function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 3 — Database Setup (Migrations)                               */
+/*  Step 2 — Database Setup                                            */
 /* ------------------------------------------------------------------ */
 
-function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
+function StepDatabase({ onComplete }: { onComplete: () => void }) {
   const [databasePassword, setDatabasePassword] = useState('')
+  const [isTesting, setIsTesting] = useState(false)
+  const [isConnected, setIsConnected] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
-  const [results, setResults] = useState<any[]>([])
+  const [errorDetails, setErrorDetails] = useState<string | null>(null)
+  const [showDetails, setShowDetails] = useState(false)
+  const [showPasswordHelp, setShowPasswordHelp] = useState(false)
 
-  const runMigrations = async () => {
+  const testConnection = async () => {
     if (!databasePassword.trim()) {
       setError('Please enter your database password')
       return
     }
 
+    setIsTesting(true)
+    setError(null)
+    setErrorDetails(null)
+
+    try {
+      const res = await fetch('/api/setup/migrate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ databasePassword, testOnly: true }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Connection failed')
+        setErrorDetails(data.detail || null)
+        setIsTesting(false)
+        return
+      }
+
+      setIsConnected(true)
+      setIsTesting(false)
+    } catch (err: any) {
+      setError(err.message || 'Failed to test connection')
+      setIsTesting(false)
+    }
+  }
+
+  const runMigrations = async () => {
     setIsRunning(true)
     setError(null)
-    setResults([])
+    setErrorDetails(null)
+    setProgress(10)
+
+    // Simulate progress while waiting for response
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => Math.min(prev + 5, 85))
+    }, 500)
 
     try {
       const res = await fetch('/api/setup/migrate', {
@@ -325,20 +324,30 @@ function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
         body: JSON.stringify({ databasePassword }),
       })
 
+      clearInterval(progressInterval)
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || 'Migration failed')
-        if (data.results) setResults(data.results)
+        setProgress(0)
+        setError(data.error || 'Database setup failed')
+        if (data.failedMigrations?.length > 0) {
+          setErrorDetails(
+            data.failedMigrations.map((f: any) => `${f.file}: ${f.error}`).join('\n')
+          )
+        }
         setIsRunning(false)
         return
       }
 
-      setResults(data.results || [])
-      setIsComplete(true)
-      setIsRunning(false)
+      setProgress(100)
+      setTimeout(() => {
+        setIsComplete(true)
+        setIsRunning(false)
+      }, 500)
     } catch (err: any) {
-      setError(err.message || 'Failed to run migrations')
+      clearInterval(progressInterval)
+      setProgress(0)
+      setError(err.message || 'Failed to run database setup')
       setIsRunning(false)
     }
   }
@@ -353,18 +362,35 @@ function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
           Database Setup
         </h2>
         <p className="text-text-secondary text-sm">
-          We'll automatically set up your database tables and security policies.
+          Connect to your Supabase database and configure tables automatically.
         </p>
       </div>
 
       {!isComplete && (
         <>
           {error && (
-            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-2">
-              <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
+            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 space-y-2">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-red-400">{error}</p>
               </div>
+              {errorDetails && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setShowDetails(!showDetails)}
+                    className="text-xs text-red-400/60 hover:text-red-400 flex items-center gap-1"
+                  >
+                    Technical details
+                    {showDetails ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  </button>
+                  {showDetails && (
+                    <pre className="text-xs text-red-400/50 whitespace-pre-wrap font-mono bg-red-500/5 rounded p-2 max-h-32 overflow-y-auto">
+                      {errorDetails}
+                    </pre>
+                  )}
+                </>
+              )}
             </div>
           )}
 
@@ -376,69 +402,96 @@ function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
               <Input
                 type="password"
                 value={databasePassword}
-                onChange={(e) => setDatabasePassword(e.target.value)}
+                onChange={(e) => {
+                  setDatabasePassword(e.target.value)
+                  setIsConnected(false)
+                  setError(null)
+                }}
                 placeholder="Enter your database password"
                 className="bg-zinc-800 border-border-default h-10 font-mono text-sm"
                 disabled={isRunning}
               />
-              <div className="text-xs text-text-muted space-y-1">
-                <p>
-                  📍 <strong>Where to find it:</strong> Supabase Dashboard →
-                  Settings → Database → Connection String
-                </p>
-                <p>
-                  This is the password you set when creating your Supabase
-                  project (not the API keys).
-                </p>
-                <p className="text-amber-400">
-                  🔒 This password is used once and never stored.
+
+              {/* Expandable help */}
+              <button
+                type="button"
+                onClick={() => setShowPasswordHelp(!showPasswordHelp)}
+                className="flex items-center gap-1.5 text-xs text-text-muted hover:text-text-secondary transition-colors"
+              >
+                <Search className="h-3 w-3" />
+                <span>Where do I find this?</span>
+                {showPasswordHelp ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+              </button>
+
+              {showPasswordHelp && (
+                <div className="p-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50 space-y-2 text-xs text-text-muted">
+                  <p>1. Go to your <strong className="text-text-secondary">Supabase project dashboard</strong></p>
+                  <p>2. Click <strong className="text-text-secondary">Settings</strong> (gear icon) in the left sidebar</p>
+                  <p>3. Click <strong className="text-text-secondary">Database</strong></p>
+                  <p>4. Your database password is what you set when creating the project</p>
+                  <p className="text-amber-400 pt-1">
+                    This is NOT an API key — it&apos;s the password you chose during Supabase project creation.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Progress bar (shown during migration) */}
+            {isRunning && (
+              <div className="space-y-2">
+                <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <p className="text-xs text-text-muted text-center">
+                  Configuring database tables, security policies, and functions...
                 </p>
               </div>
-            </div>
+            )}
 
-            <Button
-              onClick={runMigrations}
-              disabled={isRunning || !databasePassword.trim()}
-              className="w-full bg-brand hover:bg-brand-hover text-white"
-            >
-              {isRunning ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Running migrations...
-                </>
-              ) : (
-                <>
+            {/* Connection test → then run migrations */}
+            {!isConnected && !isRunning && (
+              <Button
+                onClick={testConnection}
+                disabled={isTesting || !databasePassword.trim()}
+                className="w-full bg-brand hover:bg-brand-hover text-white"
+              >
+                {isTesting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Testing connection...
+                  </>
+                ) : (
+                  <>
+                    <Database className="mr-2 h-4 w-4" />
+                    Test Connection
+                  </>
+                )}
+              </Button>
+            )}
+
+            {isConnected && !isRunning && (
+              <div className="space-y-3">
+                <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                  <p className="text-sm text-emerald-400">Connection successful!</p>
+                </div>
+                <Button
+                  onClick={runMigrations}
+                  className="w-full bg-brand hover:bg-brand-hover text-white"
+                >
                   <Database className="mr-2 h-4 w-4" />
                   Setup Database
-                </>
-              )}
-            </Button>
-          </div>
+                </Button>
+              </div>
+            )}
 
-          {results.length > 0 && (
-            <div className="space-y-2 max-h-48 overflow-y-auto rounded-lg bg-zinc-900 border border-zinc-800 p-3">
-              <p className="text-xs font-medium text-text-secondary mb-2">
-                Migration Results:
-              </p>
-              {results.map((r, i) => (
-                <div key={i} className="flex items-start gap-2 text-xs">
-                  {r.success ? (
-                    <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0 mt-0.5" />
-                  ) : (
-                    <XCircle className="h-3 w-3 text-red-500 flex-shrink-0 mt-0.5" />
-                  )}
-                  <div className="flex-1">
-                    <span className="text-text-secondary font-mono">
-                      {r.file}
-                    </span>
-                    {r.error && (
-                      <p className="text-text-muted mt-0.5">{r.error}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+            <p className="text-xs text-text-muted text-center">
+              Your password is used once for this setup and is never stored.
+            </p>
+          </div>
         </>
       )}
 
@@ -452,8 +505,7 @@ function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
               Database Ready!
             </h3>
             <p className="text-text-secondary text-sm">
-              All migrations completed successfully. Your database is ready to
-              use.
+              All tables, security policies, and functions are configured.
             </p>
           </div>
 
@@ -471,10 +523,10 @@ function StepDatabaseMigration({ onComplete }: { onComplete: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 4 — Create Admin Account                                      */
+/*  Step 3 — Admin Account + Workspace (combined)                      */
 /* ------------------------------------------------------------------ */
 
-function StepAdminAccount({
+function StepAccount({
   data,
   onChange,
   error,
@@ -494,10 +546,10 @@ function StepAdminAccount({
           <KeyRound className="h-6 w-6 text-brand" />
         </div>
         <h2 className="text-xl font-semibold text-text-primary">
-          Create Admin Account
+          Create Your Account
         </h2>
         <p className="text-text-secondary text-sm">
-          This will be the primary administrator of your workspace.
+          Set up your admin account and workspace details.
         </p>
       </div>
 
@@ -509,6 +561,7 @@ function StepAdminAccount({
       )}
 
       <div className="space-y-4">
+        {/* Admin account fields */}
         <div className="space-y-2">
           <Label className="text-text-primary">Email Address</Label>
           <Input
@@ -555,60 +608,37 @@ function StepAdminAccount({
             <p className="text-xs text-red-400">Passwords do not match</p>
           )}
         </div>
-      </div>
-    </div>
-  )
-}
 
-/* ------------------------------------------------------------------ */
-/*  Step 3 — Workspace Settings                                        */
-/* ------------------------------------------------------------------ */
+        {/* Workspace fields (combined into same step) */}
+        <div className="pt-2 border-t border-border-default space-y-4">
+          <div className="space-y-2">
+            <Label className="text-text-primary">
+              Company Name{' '}
+              <span className="text-text-muted font-normal">(optional)</span>
+            </Label>
+            <Input
+              value={data.companyName}
+              onChange={(e) => onChange({ companyName: e.target.value })}
+              placeholder="Acme Agency"
+              className="bg-zinc-800 border-border-default h-10"
+            />
+          </div>
 
-function StepWorkspace({
-  data,
-  onChange,
-}: {
-  data: SetupData
-  onChange: (partial: Partial<SetupData>) => void
-}) {
-  return (
-    <div className="space-y-5">
-      <div className="text-center space-y-1">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 mb-2">
-          <Building2 className="h-6 w-6 text-brand" />
-        </div>
-        <h2 className="text-xl font-semibold text-text-primary">Workspace Settings</h2>
-        <p className="text-text-secondary text-sm">
-          Tell us about your company or organization.
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label className="text-text-primary">Company / Organization Name</Label>
-          <Input
-            value={data.companyName}
-            onChange={(e) => onChange({ companyName: e.target.value })}
-            placeholder="Acme Agency"
-            className="bg-zinc-800 border-border-default h-10"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-text-primary">
-            Logo URL{' '}
-            <span className="text-text-muted font-normal">(optional)</span>
-          </Label>
-          <Input
-            value={data.logoUrl}
-            onChange={(e) => onChange({ logoUrl: e.target.value })}
-            placeholder="https://yoursite.com/logo.png"
-            className="bg-zinc-800 border-border-default h-10"
-          />
-          <p className="text-xs text-text-muted">
-            Paste a URL to your company logo. You can update this later in
-            Settings.
-          </p>
+          <div className="space-y-2">
+            <Label className="text-text-primary">
+              Logo URL{' '}
+              <span className="text-text-muted font-normal">(optional)</span>
+            </Label>
+            <Input
+              value={data.logoUrl}
+              onChange={(e) => onChange({ logoUrl: e.target.value })}
+              placeholder="https://yoursite.com/logo.png"
+              className="bg-zinc-800 border-border-default h-10"
+            />
+            <p className="text-xs text-text-muted">
+              You can update branding later in Settings.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -616,67 +646,7 @@ function StepWorkspace({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Step 4 — First Project (Optional)                                  */
-/* ------------------------------------------------------------------ */
-
-function StepFirstProject({
-  data,
-  onChange,
-}: {
-  data: SetupData
-  onChange: (partial: Partial<SetupData>) => void
-}) {
-  return (
-    <div className="space-y-5">
-      <div className="text-center space-y-1">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 mb-2">
-          <FolderPlus className="h-6 w-6 text-brand" />
-        </div>
-        <h2 className="text-xl font-semibold text-text-primary">
-          Create Your First Project
-        </h2>
-        <p className="text-text-secondary text-sm">
-          Optionally create a project to get started right away.
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label className="text-text-primary">Project Name</Label>
-          <Input
-            value={data.projectName}
-            onChange={(e) => onChange({ projectName: e.target.value })}
-            placeholder="Website Redesign"
-            className="bg-zinc-800 border-border-default h-10"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-text-primary">
-            Description{' '}
-            <span className="text-text-muted font-normal">(optional)</span>
-          </Label>
-          <textarea
-            value={data.projectDescription}
-            onChange={(e) => onChange({ projectDescription: e.target.value })}
-            placeholder="Brief description of the project..."
-            rows={3}
-            className="w-full rounded-md bg-zinc-800 border border-border-default px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 resize-none"
-          />
-        </div>
-      </div>
-
-      <div className="pt-1 text-center">
-        <p className="text-xs text-text-muted">
-          You can skip this step and create projects later from the dashboard.
-        </p>
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Step 5 — Done!                                                     */
+/*  Step 4 — Done!                                                     */
 /* ------------------------------------------------------------------ */
 
 function StepComplete() {
@@ -749,8 +719,6 @@ export default function SetupPage() {
     confirmPassword: '',
     companyName: '',
     logoUrl: '',
-    projectName: '',
-    projectDescription: '',
   })
 
   // Check if setup is still required
@@ -776,7 +744,7 @@ export default function SetupPage() {
   }
 
   /* ---- Validation ---- */
-  const canProceedStep4 =
+  const canProceedStep3 =
     data.email.length > 0 &&
     data.password.length >= 6 &&
     data.password === data.confirmPassword
@@ -784,17 +752,11 @@ export default function SetupPage() {
   const canProceed = (s: number) => {
     switch (s) {
       case 1:
-        return true
-      case 2:
         return false // License validation handles its own navigation
-      case 3:
+      case 2:
         return false // Database migration handles its own navigation
-      case 4:
-        return canProceedStep4
-      case 5:
-        return true // workspace settings are optional
-      case 6:
-        return true // project is optional
+      case 3:
+        return canProceedStep3
       default:
         return true
     }
@@ -823,12 +785,6 @@ export default function SetupPage() {
         password: data.password,
         companyName: data.companyName || undefined,
         logoUrl: data.logoUrl || undefined,
-        project: data.projectName
-          ? {
-              name: data.projectName,
-              description: data.projectDescription || undefined,
-            }
-          : undefined,
       }
 
       const res = await fetch('/api/setup', {
@@ -857,8 +813,8 @@ export default function SetupPage() {
 
   /* ---- Step advance handler ---- */
   const handleNext = async () => {
-    // On step 6, submit everything before moving to step 7
-    if (step === 6) {
+    // On step 3 (Account), submit everything before moving to step 4 (Done)
+    if (step === 3) {
       await handleSubmit()
       return
     }
@@ -894,25 +850,20 @@ export default function SetupPage() {
               } as React.CSSProperties
             }
           >
-            {step === 1 && <StepWelcome onNext={goNext} />}
-            {step === 2 && <StepLicenseKey onComplete={goNext} />}
-            {step === 3 && <StepDatabaseMigration onComplete={goNext} />}
-            {step === 4 && (
-              <StepAdminAccount
+            {step === 1 && <StepLicenseKey onComplete={goNext} />}
+            {step === 2 && <StepDatabase onComplete={goNext} />}
+            {step === 3 && (
+              <StepAccount
                 data={data}
                 onChange={updateData}
                 error={error}
               />
             )}
-            {step === 5 && <StepWorkspace data={data} onChange={updateData} />}
-            {step === 6 && (
-              <StepFirstProject data={data} onChange={updateData} />
-            )}
-            {step === 7 && <StepComplete />}
+            {step === 4 && <StepComplete />}
           </div>
 
-          {/* Navigation buttons (hidden for step 1, 2, 3, and 7) */}
-          {step > 3 && step < TOTAL_STEPS && (
+          {/* Navigation buttons (only for step 3 — Account) */}
+          {step === 3 && (
             <div className="flex items-center justify-between mt-8 pt-4 border-t border-border-default">
               <Button
                 variant="ghost"
@@ -924,45 +875,23 @@ export default function SetupPage() {
                 Back
               </Button>
 
-              <div className="flex gap-2">
-                {step === 6 && (
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      updateData({ projectName: '', projectDescription: '' })
-                      handleSubmit()
-                    }}
-                    className="text-text-secondary hover:text-text-primary hover:bg-zinc-800"
-                    disabled={isSubmitting}
-                  >
-                    <SkipForward className="mr-1 h-4 w-4" />
-                    Skip
-                  </Button>
+              <Button
+                onClick={handleNext}
+                disabled={!canProceed(step) || isSubmitting}
+                className="bg-brand hover:bg-brand-hover text-white"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Setting up...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-1 h-4 w-4" />
+                    Complete Setup
+                  </>
                 )}
-
-                <Button
-                  onClick={handleNext}
-                  disabled={!canProceed(step) || isSubmitting}
-                  className="bg-brand hover:bg-brand-hover text-white text-text-primary"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Setting up...
-                    </>
-                  ) : step === 6 ? (
-                    <>
-                      <Sparkles className="mr-1 h-4 w-4" />
-                      Complete Setup
-                    </>
-                  ) : (
-                    <>
-                      Continue
-                      <ArrowRight className="ml-1 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </div>
+              </Button>
             </div>
           )}
 
@@ -971,7 +900,7 @@ export default function SetupPage() {
             <div className="mt-8 pt-4 border-t border-border-default flex justify-center">
               <Button
                 onClick={() => router.replace('/login')}
-                className="bg-brand hover:bg-brand-hover text-white text-text-primary px-8 h-11 text-base"
+                className="bg-brand hover:bg-brand-hover text-white px-8 h-11 text-base"
               >
                 Go to Dashboard
                 <ArrowRight className="ml-2 h-4 w-4" />

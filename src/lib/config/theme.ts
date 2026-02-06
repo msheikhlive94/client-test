@@ -44,6 +44,18 @@ export const appConfig = {
   /** Domain used for sending email (Resend, SES, etc.) */
   emailDomain: process.env.NEXT_PUBLIC_EMAIL_DOMAIN || 'projoflow.com',
 
+  /** Price displayed on the landing page */
+  price: process.env.NEXT_PUBLIC_PRICE || '$197',
+
+  /** Original price (shown as strikethrough) */
+  originalPrice: process.env.NEXT_PUBLIC_ORIGINAL_PRICE || '$497',
+
+  /** Purchase checkout URL (Gumroad, LemonSqueezy, Stripe, etc.) */
+  purchaseUrl: process.env.NEXT_PUBLIC_PURCHASE_URL || '#pricing',
+
+  /** Demo URL — demo button hidden when empty */
+  demoUrl: process.env.NEXT_PUBLIC_DEMO_URL || '',
+
   /** Current year for copyright notices */
   copyrightYear: new Date().getFullYear(),
 } as const

@@ -390,13 +390,15 @@ export default function LandingPage() {
               Get Your License
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link
-              href="/demo"
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-700 px-8 py-4 font-medium text-white transition-colors hover:bg-zinc-900 sm:w-auto"
-            >
-              <Code className="h-5 w-5" />
-              View Demo
-            </Link>
+            {appConfig.demoUrl && (
+              <Link
+                href={appConfig.demoUrl}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-700 px-8 py-4 font-medium text-white transition-colors hover:bg-zinc-900 sm:w-auto"
+              >
+                <Code className="h-5 w-5" />
+                View Demo
+              </Link>
+            )}
           </div>
 
           {/* Trust badges */}
@@ -543,8 +545,8 @@ export default function LandingPage() {
                 Early Launch Offer
               </div>
               <div className="mb-2 flex items-baseline justify-center gap-2">
-                <span className="text-5xl font-bold">$TBD</span>
-                <span className="text-xl text-zinc-500 line-through">$497</span>
+                <span className="text-5xl font-bold">{appConfig.price}</span>
+                <span className="text-xl text-zinc-500 line-through">{appConfig.originalPrice}</span>
               </div>
               <p className="text-zinc-400">One-time payment · Lifetime access</p>
             </div>
@@ -568,7 +570,7 @@ export default function LandingPage() {
             </ul>
 
             <Link
-              href="/purchase"
+              href={appConfig.purchaseUrl}
               className="group flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-medium text-white transition-all hover:from-blue-500 hover:to-purple-500"
             >
               Get Your License Now
@@ -643,7 +645,7 @@ export default function LandingPage() {
             </Link>
 
             <p className="mt-6 text-sm text-zinc-500">
-              Questions? Email us at support@projoflow.com
+              Questions? Email us at {appConfig.supportEmail}
             </p>
           </div>
         </div>
@@ -668,7 +670,7 @@ export default function LandingPage() {
                 </div>
               )}
               <span className="text-sm text-zinc-400">
-                © 2025 {appConfig.name}. All rights reserved.
+                © {appConfig.copyrightYear} {appConfig.name}. All rights reserved.
               </span>
             </div>
 
