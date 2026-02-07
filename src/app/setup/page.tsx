@@ -100,7 +100,7 @@ function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
 
     try {
       // Call the central ProjoFlow license validation API
-      const licenseApiUrl = process.env.NEXT_PUBLIC_LICENSE_API_URL || 'https://projoflow.com/api/license/validate'
+      const licenseApiUrl = process.env.NEXT_PUBLIC_LICENSE_API_URL || 'https://www.projoflow.com/api/license/validate'
       
       const res = await fetch(licenseApiUrl, {
         method: 'POST',
