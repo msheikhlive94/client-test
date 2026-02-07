@@ -1,12 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-/** Anon client for checking setup status (self-hosted version uses anon key) */
+/** Anon client for checking setup status and auth operations */
 function createSetupClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } }
+  )
+}
+
+/** Admin client for database operations during setup (bypasses RLS) */
+function createAdminClient() {
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceKey) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY not configured')
+  }
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    serviceKey,
+    { 
+      auth: { 
+        autoRefreshToken: false, 
+        persistSession: false 
+      } 
+    }
   )
 }
 
@@ -90,10 +108,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = createSetupClient()
+    // Use anon client for auth operations
+    const anonClient = createSetupClient()
+    
+    // Use admin client for database operations (bypasses RLS)
+    const adminClient = createAdminClient()
 
     // 1. Verify no admin users exist (setup should only run once)
-    const { count, error: countError } = await supabase
+    const { count, error: countError } = await adminClient
       .from('admin_users')
       .select('*', { count: 'exact', head: true })
 
@@ -114,7 +136,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Create auth user using signUp (works with anon key)
     const { data: authData, error: authError } =
-      await supabase.auth.signUp({
+      await anonClient.auth.signUp({
         email,
         password,
         options: {
@@ -150,13 +172,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3. Create workspace
+    // 3. Create workspace (using admin client to bypass RLS)
     const workspaceName = companyName || 'My Workspace'
     const workspaceSlug = slugify(workspaceName)
     let workspaceId: string | null = null
 
     try {
-      const { data: workspace, error: workspaceError } = await supabase
+      const { data: workspace, error: workspaceError } = await adminClient
         .from('workspaces')
         .insert({
           name: workspaceName,
@@ -178,10 +200,10 @@ export async function POST(request: NextRequest) {
       console.error('Workspace creation exception:', wsErr)
     }
 
-    // 4. Create workspace member (owner)
+    // 4. Create workspace member (owner) (using admin client)
     if (workspaceId) {
       try {
-        const { error: memberError } = await supabase
+        const { error: memberError } = await adminClient
           .from('workspace_members')
           .insert({
             workspace_id: workspaceId,
@@ -197,25 +219,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 5. Insert into admin_users (with workspace_id if available)
+    // 5. Insert into admin_users (with workspace_id if available) (using admin client)
     const adminInsert: Record<string, unknown> = { email: authData.user.email }
     if (workspaceId) adminInsert.workspace_id = workspaceId
 
-    const { error: adminError } = await supabase
+    const { error: adminError } = await adminClient
       .from('admin_users')
       .insert(adminInsert)
 
     if (adminError) {
       console.error('Admin user insert error:', adminError)
-      // Attempt to clean up the auth user
-      await supabase.auth.admin.deleteUser(authData.user.id)
+      // Attempt to clean up the auth user (using admin client for auth.admin)
+      await adminClient.auth.admin.deleteUser(authData.user.id)
       return NextResponse.json(
         { error: 'Failed to grant admin privileges' },
         { status: 500 }
       )
     }
 
-    // 6. Create workspace settings (with workspace_id)
+    // 6. Create workspace settings (with workspace_id) (using admin client)
     const settingsInsert: Record<string, unknown> = {
       company_name: companyName || '',
       logo_url: logoUrl || null,
@@ -223,7 +245,7 @@ export async function POST(request: NextRequest) {
     }
     if (workspaceId) settingsInsert.workspace_id = workspaceId
 
-    const { error: settingsError } = await supabase
+    const { error: settingsError } = await adminClient
       .from('workspace_settings')
       .insert(settingsInsert)
 
@@ -232,7 +254,7 @@ export async function POST(request: NextRequest) {
       // Non-fatal — setup is still usable without this
     }
 
-    // 7. Optionally create first project (with workspace_id)
+    // 7. Optionally create first project (with workspace_id) (using admin client)
     let projectId: string | null = null
     if (project?.name) {
       const projectInsert: Record<string, unknown> = {
@@ -244,7 +266,7 @@ export async function POST(request: NextRequest) {
       }
       if (workspaceId) projectInsert.workspace_id = workspaceId
 
-      const { data: projectData, error: projectError } = await supabase
+      const { data: projectData, error: projectError } = await adminClient
         .from('projects')
         .insert(projectInsert)
         .select('id')
