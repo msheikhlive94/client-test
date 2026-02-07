@@ -45,12 +45,26 @@ function classifyError(err: any): { type: string; message: string; detail?: stri
 }
 
 /**
- * Build a PostgreSQL connection string from Supabase URL + database password.
+ * Build a PostgreSQL connection string from database host + password.
+ * Supports both pooler and direct connection formats.
  */
-function buildConnectionString(supabaseUrl: string, password: string): string {
+function buildConnectionString(host: string, password: string, supabaseUrl: string): string {
+  // Extract project reference from URL for username (pooler format uses postgres.PROJECT_REF)
   const projectRef = supabaseUrl.replace('https://', '').replace('.supabase.co', '')
-  console.log('Building connection string for project:', projectRef)
-  return `postgresql://postgres:${encodeURIComponent(password)}@db.${projectRef}.supabase.co:5432/postgres`
+  
+  // Detect connection type based on host
+  const isPooler = host.includes('pooler.supabase.com')
+  const port = isPooler ? (host.includes(':6543') ? '6543' : '5432') : '5432'
+  
+  // Clean host (remove port if included)
+  const cleanHost = host.split(':')[0]
+  
+  // Pooler connections use postgres.PROJECT_REF as username
+  const username = isPooler ? `postgres.${projectRef}` : 'postgres'
+  
+  console.log('Building connection string:', { host: cleanHost, port, username, isPooler })
+  
+  return `postgresql://${username}:${encodeURIComponent(password)}@${cleanHost}:${port}/postgres`
 }
 
 /**
@@ -64,11 +78,18 @@ function buildConnectionString(supabaseUrl: string, password: string): string {
  */
 export async function POST(request: Request) {
   try {
-    const { databasePassword, testOnly } = await request.json()
+    const { databasePassword, databaseHost, testOnly } = await request.json()
 
     if (!databasePassword || typeof databasePassword !== 'string') {
       return NextResponse.json(
         { error: 'Database password is required' },
+        { status: 400 }
+      )
+    }
+
+    if (!databaseHost || typeof databaseHost !== 'string') {
+      return NextResponse.json(
+        { error: 'Database host is required' },
         { status: 400 }
       )
     }
@@ -82,8 +103,9 @@ export async function POST(request: Request) {
       )
     }
     console.log('Using Supabase URL:', supabaseUrl)
+    console.log('Using database host:', databaseHost)
 
-    const connectionString = buildConnectionString(supabaseUrl, databasePassword)
+    const connectionString = buildConnectionString(databaseHost, databasePassword, supabaseUrl)
     const client = new Client({ 
       connectionString,
       connectionTimeoutMillis: 10000, // 10 second timeout

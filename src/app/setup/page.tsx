@@ -264,6 +264,7 @@ function StepLicenseKey({ onComplete }: { onComplete: () => void }) {
 /* ------------------------------------------------------------------ */
 
 function StepDatabase({ onComplete }: { onComplete: () => void }) {
+  const [databaseHost, setDatabaseHost] = useState('')
   const [databasePassword, setDatabasePassword] = useState('')
   const [isTesting, setIsTesting] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
@@ -276,6 +277,10 @@ function StepDatabase({ onComplete }: { onComplete: () => void }) {
   const [showPasswordHelp, setShowPasswordHelp] = useState(false)
 
   const testConnection = async () => {
+    if (!databaseHost.trim()) {
+      setError('Please enter your database host')
+      return
+    }
     if (!databasePassword.trim()) {
       setError('Please enter your database password')
       return
@@ -289,7 +294,7 @@ function StepDatabase({ onComplete }: { onComplete: () => void }) {
       const res = await fetch('/api/setup/migrate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ databasePassword, testOnly: true }),
+        body: JSON.stringify({ databaseHost, databasePassword, testOnly: true }),
       })
 
       const data = await res.json()
@@ -324,7 +329,7 @@ function StepDatabase({ onComplete }: { onComplete: () => void }) {
       const res = await fetch('/api/setup/migrate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ databasePassword }),
+        body: JSON.stringify({ databaseHost, databasePassword }),
       })
 
       clearInterval(progressInterval)
@@ -400,6 +405,27 @@ function StepDatabase({ onComplete }: { onComplete: () => void }) {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-text-primary">
+                Database Host
+              </Label>
+              <Input
+                type="text"
+                value={databaseHost}
+                onChange={(e) => {
+                  setDatabaseHost(e.target.value)
+                  setIsConnected(false)
+                  setError(null)
+                }}
+                placeholder="aws-1-eu-west-1.pooler.supabase.com"
+                className="bg-zinc-800 border-border-default h-10 font-mono text-sm"
+                disabled={isRunning}
+              />
+              <p className="text-xs text-text-muted">
+                Copy from your Supabase project → <strong className="text-text-secondary">Connect</strong> → <strong className="text-text-secondary">Transaction pooler</strong> → <strong className="text-text-secondary">host</strong>
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-text-primary">
                 Supabase Database Password
               </Label>
               <Input
@@ -458,7 +484,7 @@ function StepDatabase({ onComplete }: { onComplete: () => void }) {
             {!isConnected && !isRunning && (
               <Button
                 onClick={testConnection}
-                disabled={isTesting || !databasePassword.trim()}
+                disabled={isTesting || !databaseHost.trim() || !databasePassword.trim()}
                 className="w-full bg-brand hover:bg-brand-hover text-white"
               >
                 {isTesting ? (
