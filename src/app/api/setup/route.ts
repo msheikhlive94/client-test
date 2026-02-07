@@ -36,6 +36,12 @@ export async function GET() {
       .select('*', { count: 'exact', head: true })
 
     if (error) {
+      // If table doesn't exist (migrations not run), setup is required
+      if (error.code === 'PGRST204' || error.code === '42P01' || error.message?.includes('does not exist')) {
+        console.log('Admin users table not found, setup required')
+        return NextResponse.json({ setupRequired: true })
+      }
+      
       console.error('Setup status check error:', error)
       return NextResponse.json(
         { error: 'Failed to check setup status' },
@@ -48,10 +54,8 @@ export async function GET() {
     })
   } catch (err) {
     console.error('Setup status error:', err)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    // On any unexpected error, assume setup is required
+    return NextResponse.json({ setupRequired: true })
   }
 }
 
