@@ -198,7 +198,7 @@ export function TaskAttachments({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 w-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-2 text-text-secondary">
         <Paperclip className="h-4 w-4" />
@@ -257,7 +257,7 @@ export function TaskAttachments({
             return (
               <div
                 key={attachment.id}
-                className="group flex items-center gap-3 p-2 rounded-lg bg-surface hover:bg-surface-hover transition-colors"
+                className="group flex items-center gap-3 p-2 rounded-lg bg-surface hover:bg-surface-hover transition-colors overflow-hidden"
               >
                 {/* Thumbnail or icon */}
                 {isImg ? (
