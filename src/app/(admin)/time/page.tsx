@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useWeekTimeEntries, useTimeStats, useProjects, useDeleteTimeEntry, TimeEntryWithRelations } from '@/lib/hooks'
 import { TimeEntry } from '@/types/database'
-import { Plus, ChevronLeft, ChevronRight, Clock, DollarSign, Trash2 } from 'lucide-react'
+import { Plus, ChevronLeft, ChevronRight, Clock, DollarSign, Trash2, Download, FileText } from 'lucide-react'
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, eachDayOfInterval, isSameDay } from 'date-fns'
 import { TimeEntryDialog } from '@/components/dialogs/time-entry-dialog'
+import { InvoiceDialog } from '@/components/dialogs/invoice-dialog'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import {
@@ -21,6 +22,7 @@ import {
 export default function TimePage() {
   const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }))
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [editingEntry, setEditingEntry] = useState<TimeEntry | undefined>()
 
@@ -75,6 +77,38 @@ export default function TimePage() {
     }
   }
 
+  const handleExportCSV = () => {
+    if (!entries?.length) {
+      toast.error('No entries to export')
+      return
+    }
+
+    // Build CSV content
+    const headers = ['Date', 'Project', 'Client', 'Description', 'Duration (hours)', 'Billable', 'Hourly Rate', 'Amount']
+    const rows = entries.map((entry: any) => [
+      format(new Date(entry.date), 'yyyy-MM-dd'),
+      entry.projects?.name || '',
+      entry.projects?.clients?.name || '',
+      `"${(entry.description || '').replace(/"/g, '""')}"`,
+      (entry.duration_minutes / 60).toFixed(2),
+      entry.billable ? 'Yes' : 'No',
+      entry.projects?.hourly_rate || 0,
+      entry.billable ? ((entry.duration_minutes / 60) * (entry.projects?.hourly_rate || 0)).toFixed(2) : '0.00'
+    ])
+
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+    
+    // Download
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `time-entries-${format(currentWeek, 'yyyy-MM-dd')}-to-${format(weekEnd, 'yyyy-MM-dd')}.csv`
+    link.click()
+    URL.revokeObjectURL(link.href)
+    
+    toast.success('CSV exported')
+  }
+
   // Show all projects except cancelled/completed for time logging
   const availableProjects = projects?.filter(p => p.status !== 'cancelled' && p.status !== 'completed')
 
@@ -103,14 +137,37 @@ export default function TimePage() {
               ))}
             </SelectContent>
           </Select>
-          <Button
-            onClick={handleNewEntry}
-            className="bg-brand hover:bg-brand-hover text-white w-full sm:w-auto"
-            disabled={!selectedProjectId}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Log Time
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={handleExportCSV}
+              className="border-border-default text-text-primary hover:bg-surface-hover"
+              disabled={!entries?.length}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Export CSV</span>
+              <span className="sm:hidden">CSV</span>
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setInvoiceDialogOpen(true)}
+              className="border-border-default text-text-primary hover:bg-surface-hover"
+              disabled={!selectedProjectId}
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Generate Invoice</span>
+              <span className="sm:hidden">Invoice</span>
+            </Button>
+            <Button
+              onClick={handleNewEntry}
+              className="bg-brand hover:bg-brand-hover text-white"
+              disabled={!selectedProjectId}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Log Time</span>
+              <span className="sm:hidden">Log</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -368,12 +425,19 @@ export default function TimePage() {
       </Card>
 
       {selectedProjectId && (
-        <TimeEntryDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          projectId={selectedProjectId}
-          entry={editingEntry}
-        />
+        <>
+          <TimeEntryDialog
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            projectId={selectedProjectId}
+            entry={editingEntry}
+          />
+          <InvoiceDialog
+            open={invoiceDialogOpen}
+            onOpenChange={setInvoiceDialogOpen}
+            projectId={selectedProjectId}
+          />
+        </>
       )}
     </div>
   )
