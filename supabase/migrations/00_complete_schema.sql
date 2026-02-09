@@ -1029,3 +1029,57 @@ CREATE POLICY "task_attachments_delete" ON storage.objects FOR DELETE TO authent
 -- Service role full access to storage
 CREATE POLICY "storage_service_role" ON storage.objects FOR ALL TO service_role
   USING (true) WITH CHECK (true);
+
+
+-- ============================================================
+-- 12. TASK ATTACHMENTS TABLE
+-- ============================================================
+
+-- Table for task and comment file attachments
+CREATE TABLE IF NOT EXISTS task_attachments (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id uuid NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  comment_id uuid REFERENCES task_comments(id) ON DELETE CASCADE,
+  file_name text NOT NULL,
+  file_path text NOT NULL,
+  file_size bigint NOT NULL DEFAULT 0,
+  mime_type text NOT NULL DEFAULT 'application/octet-stream',
+  uploaded_by uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_at timestamptz DEFAULT now()
+);
+
+-- Indexes for task_attachments
+CREATE INDEX IF NOT EXISTS idx_task_attachments_task_id ON task_attachments(task_id);
+CREATE INDEX IF NOT EXISTS idx_task_attachments_comment_id ON task_attachments(comment_id);
+
+-- Enable RLS
+ALTER TABLE task_attachments ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for task_attachments
+CREATE POLICY "task_attachments_select" ON task_attachments FOR SELECT TO authenticated
+  USING (
+    task_id IN (
+      SELECT t.id FROM tasks t WHERE t.workspace_id IN (SELECT get_user_workspace_ids(auth.uid()))
+    )
+  );
+
+CREATE POLICY "task_attachments_insert" ON task_attachments FOR INSERT TO authenticated
+  WITH CHECK (
+    task_id IN (
+      SELECT t.id FROM tasks t WHERE t.workspace_id IN (SELECT get_user_workspace_ids(auth.uid()))
+    )
+  );
+
+CREATE POLICY "task_attachments_delete" ON task_attachments FOR DELETE TO authenticated
+  USING (
+    task_id IN (
+      SELECT t.id FROM tasks t WHERE t.workspace_id IN (SELECT get_user_workspace_ids(auth.uid()))
+    )
+  );
+
+CREATE POLICY "task_attachments_service" ON task_attachments FOR ALL TO service_role
+  USING (true) WITH CHECK (true);
+
+-- Grant permissions
+GRANT ALL ON task_attachments TO authenticated;
+GRANT ALL ON task_attachments TO service_role;
