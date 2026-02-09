@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   FileText,
   Settings,
   Menu,
+  LogOut,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
@@ -19,6 +20,7 @@ import { useState } from 'react'
 import { appConfig } from '@/lib/config/theme'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useWorkspaceBranding } from '@/lib/contexts/workspace-context'
+import { createClient } from '@/lib/supabase/client'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -31,7 +33,16 @@ const navigation = [
 
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
+  const router = useRouter()
   const { logoUrl } = useWorkspaceBranding()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   return (
     <>
@@ -70,7 +81,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
         })}
       </nav>
 
-      {/* Bottom section: theme toggle + settings */}
+      {/* Bottom section: theme toggle + settings + logout */}
       <div className="border-t border-border-default p-3 space-y-1">
         <div className="flex items-center justify-between px-3 py-1">
           <span className="text-xs text-text-muted">Theme</span>
@@ -89,6 +100,14 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
           <Settings className="h-5 w-5" />
           Settings
         </Link>
+        <button
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors text-red-400 hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50"
+        >
+          <LogOut className="h-5 w-5" />
+          {isLoggingOut ? 'Logging out...' : 'Logout'}
+        </button>
       </div>
     </>
   )

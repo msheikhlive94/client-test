@@ -5,7 +5,19 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Settings, Database, Palette, Upload, Loader2, Check, RotateCcw, Image as ImageIcon, X } from 'lucide-react'
+import { Settings, Database, Palette, Upload, Loader2, Check, RotateCcw, Image as ImageIcon, X, Trash2, AlertTriangle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import Image from 'next/image'
 import { appConfig } from '@/lib/config/theme'
 import { useWorkspace, useWorkspaceBranding, defaultThemeConfig, ThemeConfig } from '@/lib/contexts/workspace-context'
@@ -538,6 +550,151 @@ export default function SettingsPage() {
           </p>
         </CardContent>
       </Card>
+
+      {/* Danger Zone */}
+      <DangerZone />
     </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Danger Zone Component                                              */
+/* ------------------------------------------------------------------ */
+
+function DangerZone() {
+  const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [confirmText, setConfirmText] = useState('')
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  const handleDelete = async () => {
+    if (confirmText !== 'DELETE') {
+      toast.error('Please type DELETE to confirm')
+      return
+    }
+
+    setIsDeleting(true)
+
+    try {
+      const res = await fetch('/api/workspace/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmText }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        toast.error(data.error || 'Failed to delete organization')
+        setIsDeleting(false)
+        return
+      }
+
+      toast.success('Organization deleted successfully')
+      
+      // Redirect to setup page after deletion
+      setTimeout(() => {
+        router.push('/setup')
+      }, 1000)
+    } catch (error: any) {
+      toast.error(error.message || 'An error occurred')
+      setIsDeleting(false)
+    }
+  }
+
+  return (
+    <Card className="bg-surface-raised border-red-500/30">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="h-5 w-5 text-red-500" />
+          <CardTitle className="text-red-500">Danger Zone</CardTitle>
+        </div>
+        <CardDescription className="text-text-secondary">
+          Irreversible actions that affect your entire organization
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="p-4 rounded-lg border border-red-500/30 bg-red-500/5">
+          <h4 className="font-semibold text-text-primary mb-2">Delete Organization</h4>
+          <p className="text-sm text-text-secondary mb-4">
+            Permanently delete your organization and all associated data including projects, 
+            tasks, clients, time entries, and files. This action cannot be undone.
+          </p>
+          
+          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="destructive" 
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete Organization
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-surface-raised border-border-default">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-text-primary flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-500" />
+                  Delete Organization?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-text-secondary space-y-3">
+                  <p>
+                    This will permanently delete your organization and all data:
+                  </p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>All projects and tasks</li>
+                    <li>All clients and contacts</li>
+                    <li>All time entries and invoices</li>
+                    <li>All files and attachments</li>
+                    <li>All team members and settings</li>
+                    <li>Your admin account</li>
+                  </ul>
+                  <p className="font-semibold text-red-400">
+                    This action cannot be undone.
+                  </p>
+                  <div className="pt-2">
+                    <Label className="text-text-primary">
+                      Type <span className="font-mono font-bold text-red-400">DELETE</span> to confirm:
+                    </Label>
+                    <Input
+                      value={confirmText}
+                      onChange={(e) => setConfirmText(e.target.value)}
+                      placeholder="DELETE"
+                      className="mt-2 bg-input-bg border-border-default font-mono"
+                      disabled={isDeleting}
+                    />
+                  </div>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel 
+                  className="bg-surface hover:bg-surface-hover text-text-primary border-border-default"
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <Button
+                  onClick={handleDelete}
+                  disabled={confirmText !== 'DELETE' || isDeleting}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {isDeleting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete Everything
+                    </>
+                  )}
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
