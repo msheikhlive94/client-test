@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -53,6 +54,7 @@ const statusConfig: Record<InvoiceStatus, { label: string; color: string; icon: 
 }
 
 export default function InvoicesPage() {
+  const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceWithRelations | null>(null)
@@ -210,7 +212,8 @@ export default function InvoicesPage() {
                 return (
                   <div
                     key={invoice.id}
-                    className="flex items-center justify-between p-4 hover:bg-surface-hover transition-colors"
+                    className="flex items-center justify-between p-4 hover:bg-surface-hover transition-colors cursor-pointer"
+                    onClick={() => router.push(`/invoices/${invoice.id}`)}
                   >
                     <div className="flex items-center gap-4 min-w-0 flex-1">
                       <div className="hidden sm:flex h-10 w-10 rounded-lg bg-surface items-center justify-center">
@@ -255,6 +258,7 @@ export default function InvoicesPage() {
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0 text-text-muted hover:text-text-primary"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>

@@ -26,6 +26,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { InvoiceSettings } from '@/components/settings/invoice-settings'
 
 // Color picker for a single color
 function ColorInput({
@@ -317,6 +318,9 @@ export default function SettingsPage() {
           </Button>
         </CardContent>
       </Card>
+
+      {/* Invoice Settings */}
+      <InvoiceSettings />
 
       {/* Branding — Logo */}
       <Card className="bg-surface-raised border-border-default">
