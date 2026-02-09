@@ -1014,33 +1014,42 @@ VALUES
   ('task-attachments', 'task-attachments', false, 52428800, NULL)
 ON CONFLICT (id) DO NOTHING;
 
--- Storage policies for brand-assets (public bucket)
+-- Storage policies for brand-assets (public bucket) - idempotent
+DROP POLICY IF EXISTS "brand_assets_select" ON storage.objects;
 CREATE POLICY "brand_assets_select" ON storage.objects FOR SELECT
   USING (bucket_id = 'brand-assets');
 
+DROP POLICY IF EXISTS "brand_assets_insert" ON storage.objects;
 CREATE POLICY "brand_assets_insert" ON storage.objects FOR INSERT TO authenticated
   WITH CHECK (bucket_id = 'brand-assets');
 
+DROP POLICY IF EXISTS "brand_assets_update" ON storage.objects;
 CREATE POLICY "brand_assets_update" ON storage.objects FOR UPDATE TO authenticated
   USING (bucket_id = 'brand-assets');
 
+DROP POLICY IF EXISTS "brand_assets_delete" ON storage.objects;
 CREATE POLICY "brand_assets_delete" ON storage.objects FOR DELETE TO authenticated
   USING (bucket_id = 'brand-assets');
 
--- Storage policies for task-attachments (private bucket)
+-- Storage policies for task-attachments (private bucket) - idempotent
+DROP POLICY IF EXISTS "task_attachments_select" ON storage.objects;
 CREATE POLICY "task_attachments_select" ON storage.objects FOR SELECT TO authenticated
   USING (bucket_id = 'task-attachments');
 
+DROP POLICY IF EXISTS "task_attachments_insert" ON storage.objects;
 CREATE POLICY "task_attachments_insert" ON storage.objects FOR INSERT TO authenticated
   WITH CHECK (bucket_id = 'task-attachments');
 
+DROP POLICY IF EXISTS "task_attachments_update" ON storage.objects;
 CREATE POLICY "task_attachments_update" ON storage.objects FOR UPDATE TO authenticated
   USING (bucket_id = 'task-attachments');
 
+DROP POLICY IF EXISTS "task_attachments_delete" ON storage.objects;
 CREATE POLICY "task_attachments_delete" ON storage.objects FOR DELETE TO authenticated
   USING (bucket_id = 'task-attachments');
 
--- Service role full access to storage
+-- Service role full access to storage - idempotent
+DROP POLICY IF EXISTS "storage_service_role" ON storage.objects;
 CREATE POLICY "storage_service_role" ON storage.objects FOR ALL TO service_role
   USING (true) WITH CHECK (true);
 
@@ -1069,7 +1078,8 @@ CREATE INDEX IF NOT EXISTS idx_task_attachments_comment_id ON task_attachments(c
 -- Enable RLS
 ALTER TABLE task_attachments ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for task_attachments
+-- RLS Policies for task_attachments (idempotent: drop then create)
+DROP POLICY IF EXISTS "task_attachments_select" ON task_attachments;
 CREATE POLICY "task_attachments_select" ON task_attachments FOR SELECT TO authenticated
   USING (
     task_id IN (
@@ -1077,6 +1087,7 @@ CREATE POLICY "task_attachments_select" ON task_attachments FOR SELECT TO authen
     )
   );
 
+DROP POLICY IF EXISTS "task_attachments_insert" ON task_attachments;
 CREATE POLICY "task_attachments_insert" ON task_attachments FOR INSERT TO authenticated
   WITH CHECK (
     task_id IN (
@@ -1084,6 +1095,7 @@ CREATE POLICY "task_attachments_insert" ON task_attachments FOR INSERT TO authen
     )
   );
 
+DROP POLICY IF EXISTS "task_attachments_delete" ON task_attachments;
 CREATE POLICY "task_attachments_delete" ON task_attachments FOR DELETE TO authenticated
   USING (
     task_id IN (
@@ -1091,6 +1103,7 @@ CREATE POLICY "task_attachments_delete" ON task_attachments FOR DELETE TO authen
     )
   );
 
+DROP POLICY IF EXISTS "task_attachments_service" ON task_attachments;
 CREATE POLICY "task_attachments_service" ON task_attachments FOR ALL TO service_role
   USING (true) WITH CHECK (true);
 
