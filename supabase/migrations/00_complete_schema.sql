@@ -443,6 +443,20 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT OR UPDATE ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+-- ---- Auto-cleanup public.users when auth.users deleted ----
+CREATE OR REPLACE FUNCTION public.handle_auth_user_deleted()
+RETURNS trigger AS $$
+BEGIN
+  DELETE FROM public.users WHERE id = OLD.id;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_deleted ON auth.users;
+CREATE TRIGGER on_auth_user_deleted
+  AFTER DELETE ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_auth_user_deleted();
+
 -- ---- update_updated_at trigger function ----
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS trigger AS $$
