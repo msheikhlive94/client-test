@@ -115,7 +115,7 @@ export function TaskDialog({ open, onOpenChange, projectId, task, initialStatus 
           <DialogTitle>{task ? 'Edit Task' : 'New Task'}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 w-full overflow-hidden">
           <div className="space-y-2">
             <Label>Task Title *</Label>
             <Input

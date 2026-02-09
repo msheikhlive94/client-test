@@ -180,7 +180,7 @@ export function TaskComments({
                   </Avatar>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 overflow-hidden">
                     {/* Header */}
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="text-sm font-medium text-text-primary truncate max-w-[150px] sm:max-w-none">

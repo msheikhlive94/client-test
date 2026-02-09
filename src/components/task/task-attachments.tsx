@@ -275,7 +275,7 @@ export function TaskAttachments({
                 )}
 
                 {/* File info */}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 overflow-hidden max-w-[calc(100%-6rem)]">
                   <p className="text-sm font-medium text-text-primary truncate">
                     {attachment.file_name}
                   </p>
