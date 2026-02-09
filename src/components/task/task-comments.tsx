@@ -131,7 +131,7 @@ export function TaskComments({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-2 text-text-secondary">
         <MessageSquare className="h-4 w-4" />
