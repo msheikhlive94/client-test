@@ -9,8 +9,7 @@ import { Separator } from '@/components/ui/separator'
 import { 
   useInvoice, 
   useUpdateInvoice,
-  useInvoiceSettings,
-  useWorkspace
+  useInvoiceSettings
 } from '@/lib/hooks'
 import { useWorkspace as useWorkspaceContext } from '@/lib/contexts/workspace-context'
 import { 
