@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -108,6 +109,9 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
       <DialogContent className="bg-surface-raised border-border-default text-text-primary">
         <DialogHeader>
           <DialogTitle>{entry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
+          <DialogDescription className="text-text-muted">
+            {entry ? 'Update the details of this time entry.' : 'Record time spent on this project.'}
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -163,14 +167,14 @@ export function TimeEntryDialog({ open, onOpenChange, projectId, entry }: TimeEn
             <div className="space-y-2">
               <Label>Task (optional)</Label>
               <Select
-                value={formData.task_id}
-                onValueChange={(v) => setFormData({ ...formData, task_id: v })}
+                value={formData.task_id || '__none__'}
+                onValueChange={(v) => setFormData({ ...formData, task_id: v === '__none__' ? '' : v })}
               >
                 <SelectTrigger className="bg-surface-raised border-border-default">
                   <SelectValue placeholder="Select a task" />
                 </SelectTrigger>
                 <SelectContent className="bg-surface-raised border-border-default">
-                  <SelectItem value="">No task</SelectItem>
+                  <SelectItem value="__none__">No task</SelectItem>
                   {tasks.map((task) => (
                     <SelectItem key={task.id} value={task.id}>
                       {task.title}
