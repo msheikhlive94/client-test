@@ -75,7 +75,8 @@ export default function TimePage() {
     }
   }
 
-  const activeProjects = projects?.filter(p => p.status === 'active' || p.status === 'on_hold')
+  // Show all projects except cancelled/completed for time logging
+  const availableProjects = projects?.filter(p => p.status !== 'cancelled' && p.status !== 'completed')
 
   return (
     <div className="p-4 md:p-6 space-y-4 md:space-y-6">
@@ -89,14 +90,15 @@ export default function TimePage() {
           <Select
             value={selectedProjectId}
             onValueChange={setSelectedProjectId}
+            disabled={!availableProjects?.length}
           >
             <SelectTrigger className="w-full sm:w-48 bg-surface-raised border-border-default text-text-primary">
-              <SelectValue placeholder="Select project" />
+              <SelectValue placeholder={availableProjects?.length ? "Select project" : "No projects available"} />
             </SelectTrigger>
             <SelectContent className="bg-surface-raised border-border-default">
-              {activeProjects?.map((project) => (
+              {availableProjects?.map((project) => (
                 <SelectItem key={project.id} value={project.id}>
-                  {project.name}
+                  {project.name} {project.status === 'draft' && '(Draft)'}
                 </SelectItem>
               ))}
             </SelectContent>
