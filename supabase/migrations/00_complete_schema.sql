@@ -985,3 +985,47 @@ END $$;
 -- DONE. ProjoFlow database is ready.
 -- The setup wizard will create the initial workspace and admin.
 -- ============================================================
+
+
+-- ============================================================
+-- 11. STORAGE BUCKETS
+-- ============================================================
+
+-- Create storage buckets for file uploads
+-- Note: This uses Supabase's storage schema
+
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES 
+  ('brand-assets', 'brand-assets', true, 5242880, ARRAY['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml']),
+  ('task-attachments', 'task-attachments', false, 52428800, NULL)
+ON CONFLICT (id) DO NOTHING;
+
+-- Storage policies for brand-assets (public bucket)
+CREATE POLICY "brand_assets_select" ON storage.objects FOR SELECT
+  USING (bucket_id = 'brand-assets');
+
+CREATE POLICY "brand_assets_insert" ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'brand-assets');
+
+CREATE POLICY "brand_assets_update" ON storage.objects FOR UPDATE TO authenticated
+  USING (bucket_id = 'brand-assets');
+
+CREATE POLICY "brand_assets_delete" ON storage.objects FOR DELETE TO authenticated
+  USING (bucket_id = 'brand-assets');
+
+-- Storage policies for task-attachments (private bucket)
+CREATE POLICY "task_attachments_select" ON storage.objects FOR SELECT TO authenticated
+  USING (bucket_id = 'task-attachments');
+
+CREATE POLICY "task_attachments_insert" ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'task-attachments');
+
+CREATE POLICY "task_attachments_update" ON storage.objects FOR UPDATE TO authenticated
+  USING (bucket_id = 'task-attachments');
+
+CREATE POLICY "task_attachments_delete" ON storage.objects FOR DELETE TO authenticated
+  USING (bucket_id = 'task-attachments');
+
+-- Service role full access to storage
+CREATE POLICY "storage_service_role" ON storage.objects FOR ALL TO service_role
+  USING (true) WITH CHECK (true);
